@@ -1,0 +1,26 @@
+### INPUT
+expname = eval_genebody
+rootdir = /mnt/lustre/xusu/Tasks/IBRNet_benchmark  # REPLACE THIS with YOUR PATH.
+ckpt_path = /mnt/lustre/xusu/Tasks/IBRNet_benchmark/pretrained//model_001000.pth   # REPLACE THIS with YOUR PATH.
+distributed = False
+train_n_frames = 75
+
+## dataset
+eval_dataset = genebody
+eval_scenes = [natacha, barry, amanda, mahaoran, fuzhizhi, soufianou_boubacar_moumouni, jinyutong, joseph_matanda, zhuna, maria]
+
+### TESTING
+chunk_size = 3072
+
+### RENDERING
+N_importance = 64
+N_samples = 64
+inv_uniform = True
+white_bkgd = False
+
+### CONSOLE AND TENSORBOARD
+i_img = 2000
+i_print = 100
+i_weights = 5000
+
+testskip = 30
