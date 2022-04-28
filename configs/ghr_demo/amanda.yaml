@@ -1,0 +1,87 @@
+task: 'if_nerf'
+gpus: [0]
+
+parent_cfg: 'configs/zju_mocap_exp/latent_xyzc_313.yaml'
+
+train_dataset_module: 'lib.datasets.light_stage.multi_view_dataset_genebody'
+train_dataset_path: 'lib/datasets/light_stage/multi_view_dataset_genebody.py'
+test_dataset_module: 'lib.datasets.light_stage.multi_view_dataset_genebody'
+test_dataset_path: 'lib/datasets/light_stage/multi_view_dataset_genebody.py'
+novel_pose_cfg:
+    train_dataset_module: 'lib.datasets.light_stage.multi_view_perform_dataset'
+    train_dataset_path: 'lib/datasets/light_stage/multi_view_perform_dataset.py'
+    test_dataset_module: 'lib.datasets.light_stage.multi_view_dataset_genebody_perform'
+    test_dataset_path: 'lib/datasets/light_stage/multi_view_dataset_genebody_perform.py'
+
+    renderer_module: 'lib.networks.renderer.if_clight_renderer_mmsk'
+    renderer_path: 'lib/networks/renderer/if_clight_renderer_mmsk.py'
+
+    visualizer_module: 'lib.visualizers.if_nerf_perform'
+    visualizer_path: 'lib/visualizers/if_nerf_perform.py'
+
+    test:
+        sampler: ''
+
+mesh_cfg:
+    train_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_genebody'
+    train_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_genebody.py'
+    test_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_genebody'
+    test_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_genebody.py'
+
+    network_module: 'lib.networks.latent_xyzc'
+    network_path: 'lib/networks/latent_xyzc.py'
+    renderer_module: 'lib.networks.renderer.if_mesh_renderer'
+    renderer_path: 'lib/networks/renderer/if_mesh_renderer.py'
+
+    visualizer_module: 'lib.visualizers.if_nerf_mesh'
+    visualizer_path: 'lib/visualizers/if_nerf_mesh.py'
+
+    mesh_th: 5
+
+    test:
+        sampler: 'FrameSampler'
+        frame_sampler_interval: 1
+
+train_dataset:
+    data_root: 'data/genebody'
+    human: 'amanda'
+    ann_file: 'data/genebody/annots.npy'
+    split: 'train'
+
+test_dataset:
+    data_root: 'data/genebody'
+    human: 'amanda'
+    ann_file: 'data/genebody/annots.npy'
+    split: 'test'
+    eval_skip: 5
+novel_pose_cfg:
+    train_dataset_module: 'lib.datasets.light_stage.multi_view_perform_dataset'
+    train_dataset_path: 'lib/datasets/light_stage/multi_view_perform_dataset.py'
+    test_dataset_module: 'lib.datasets.light_stage.multi_view_dataset_genebody_perform'
+    test_dataset_path: 'lib/datasets/light_stage/multi_view_dataset_genebody_perform.py'
+
+    renderer_module: 'lib.networks.renderer.if_clight_renderer_mmsk'
+    renderer_path: 'lib/networks/renderer/if_clight_renderer_mmsk.py'
+
+    visualizer_module: 'lib.visualizers.if_nerf_perform'
+    visualizer_path: 'lib/visualizers/if_nerf_perform.py'
+
+    test:
+        sampler: ''
+
+# data options
+H: 512
+W: 512
+ratio: 1.
+training_view: [1,13,25,37]
+num_train_frame: 75 
+smpl: 'smpl'
+vertices: 'vertices'
+params: 'params'
+big_box: True
+frame_name_start: 45
+begin_ith_frame: 45
+
+eval_whole_img: True
+
+nv: 10475

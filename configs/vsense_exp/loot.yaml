@@ -1,0 +1,71 @@
+task: 'if_nerf'
+gpus: [0]
+
+parent_cfg: 'configs/zju_mocap_exp/latent_xyzc_313.yaml'
+
+train_dataset_module: 'lib.datasets.light_stage.multi_view_dataset_vsense'
+train_dataset_path: 'lib/datasets/light_stage/multi_view_dataset_vsense.py'
+test_dataset_module: 'lib.datasets.light_stage.multi_view_dataset_vsense'
+test_dataset_path: 'lib/datasets/light_stage/multi_view_dataset_vsense.py'
+mesh_cfg:
+    train_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_vsense'
+    train_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_vsense.py'
+    test_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_vsense'
+    test_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_vsense.py'
+
+    network_module: 'lib.networks.latent_xyzc'
+    network_path: 'lib/networks/latent_xyzc.py'
+    renderer_module: 'lib.networks.renderer.if_mesh_renderer'
+    renderer_path: 'lib/networks/renderer/if_mesh_renderer.py'
+
+    visualizer_module: 'lib.visualizers.if_nerf_mesh'
+    visualizer_path: 'lib/visualizers/if_nerf_mesh.py'
+
+    mesh_th: 0
+
+novel_pose_cfg:
+    train_dataset_module: 'lib.datasets.light_stage.multi_view_perform_dataset_vsense'
+    train_dataset_path: 'lib/datasets/light_stage/multi_view_perform_dataset_vsense.py'
+    test_dataset_module: 'lib.datasets.light_stage.multi_view_perform_dataset_vsense'
+    test_dataset_path: 'lib/datasets/light_stage/multi_view_perform_dataset_vsense.py'
+
+    renderer_module: 'lib.networks.renderer.if_clight_renderer_mmsk'
+    renderer_path: 'lib/networks/renderer/if_clight_renderer_mmsk.py'
+
+    visualizer_module: 'lib.visualizers.if_nerf_perform'
+    visualizer_path: 'lib/visualizers/if_nerf_perform.py'
+
+    test:
+        sampler: ''
+
+train_dataset:
+    data_root: 'data/vsense'
+    human: 'loot'
+    ann_file: 'data/vsense/loot/annots.npy'
+    split: 'train'
+
+test_dataset:
+    data_root: 'data/vsense'
+    human: 'loot'
+    ann_file: 'data/vsense/loot/annots.npy'
+    split: 'test'
+
+# data options
+H: 512
+W: 512
+ratio: 1.
+training_view: [0, 4, 9, 13, 18, 22, 27, 31]
+num_train_frame: 150
+smpl: 'smpl'
+vertices: 'vertices'
+params: 'params'
+big_box: True
+voxel_size: [8, 8, 8]  # dhw
+
+test:
+    frame_sampler_interval: 1
+begin_ith_frame: 1
+
+eval_whole_img: True
+
+nv: 10475
