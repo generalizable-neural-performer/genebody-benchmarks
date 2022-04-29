@@ -14,19 +14,16 @@ conda activate ibrnet
 ```
 
 ## Datasets
-Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
-```
-├──data/
-    ├──genebody/
-        ├──amanda/
-        ├──barry/
-```
-
-#### (a) **GeneBody**
 Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html) from OneDrive for training and evaluation.
+ The organization of the datasets should be the same as above.
+```
+├──genebody/
+  ├──amanda/
+  ├──barry/
+```
 
 ## Evaluation
-First download our [pretrained models](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1) under the project `root/pretrained/` directory.
+First download our [pretrained models](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EgD5tn6u7ptFkr4xp6VEE2EBfGwE_3EOQ0I0JL-sVISM5Q?e=cqdsc8) under the project `root/pretrained/` directory.
 
 You can use `eval/eval.py` to evaluate the pretrained model. For example, to obtain the PSNR, SSIM and LPIPS on the *amanda* scene on Genebody dataset, run:
 ```
@@ -43,7 +40,7 @@ python reconstruct.py --config ../configs/eval_genebody.txt --eval_scenes amanda
 ```
 
 ## Training
-We recommand using the RenderPeople [pretrained model](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1) to re-implement our results on Genebody dataset.
+We recommand using the RenderPeople [pretrained model](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EgD5tn6u7ptFkr4xp6VEE2EBfGwE_3EOQ0I0JL-sVISM5Q?e=cqdsc8) to re-implement our results on Genebody dataset.
 ```
 # this example uses 8 GPUs (nproc_per_node=8) 
 python -m torch.distributed.launch --nproc_per_node=8 train.py --config configs/train_genebody.txt
