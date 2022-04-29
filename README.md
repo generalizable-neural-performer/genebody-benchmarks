@@ -41,8 +41,15 @@ Download our data [Genebody](https://generalizable-neural-performer.github.io/ge
   ├──...
 ```
 
+## Generate Point Cloud
+NHR takes dense colored point cloud as input, we provide a tool to generate dense point via sampling the SMPLx surface, and apply lumigraph blending on sampled points from source views. Take `amanda` as an example, run
+```
+python tools/gen_smpl_pc.py path_to_genebody amanda
+```
+will give you per-frame colored point cloud in `amanda/smpl_color` directory in OBJ format.
+
 ## Evaluation
-First download our [pretrained models](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EvGHnCMrL2xPoFPu6Hs4d5IBMgfAi753agWjCPOltCJsoA?e=tizNoe) under the `./logs/${SUBJECT}` directory.
+First download our [pretrained models](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EqQDNVch2j5DmyIDnHX0VgkBDdCksmT4Kfq2oPOMn6gfMg?e=dy6yUA) under the `./logs/${SUBJECT}` directory.
 
 You can use `${DATASET}/test_{DATASET}.py` to evaluate the pretrained model. For example, to obtain the PSNR, SSIM and LPIPS on  `DATASET` such as V-Sense, ZJUMocap and Genebody dataset, run:
 ```
