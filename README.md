@@ -1,4 +1,4 @@
-# GNR Benchmark-Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans
+# Genebody Benchmark-Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans
 ### [Project Page](https://zju3dv.github.io/neuralbody) | [Video](https://www.youtube.com/watch?v=BPCAMeBCE-8) | [Paper](https://arxiv.org/pdf/2012.15838.pdf) | [Data](https://zjueducn-my.sharepoint.com/:f:/g/personal/pengsida_zju_edu_cn/Eo9zn4x_xcZKmYHZNjzel7gBdWf_d4m-pISHhPWB-GZBYw?e=Hf4mz7)
 
 > [Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans](https://arxiv.org/pdf/2012.15838.pdf)  
@@ -36,10 +36,10 @@ python train_net.py --cfg_file configs/ghr_test/amanda.yaml exp_name amanda resu
 If you find this code useful for your research, please use the following BibTeX entry.
 
 ```
-@inproceedings{peng2021neural,
-  title={Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans},
-  author={Peng, Sida and Zhang, Yuanqing and Xu, Yinghao and Wang, Qianqian and Shuai, Qing and Bao, Hujun and Zhou, Xiaowei},
-  booktitle={CVPR},
-  year={2021}
-}
+@article{
+    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
+    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    publisher = {arXiv},
+    year = {2022},
+  }
 ```
