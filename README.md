@@ -1,4 +1,4 @@
-# GeneBody benchmark-IBRNet: Learning Multi-View Image-Based Rendering
+# GeneBody benchmark - Deferred Neural Rendering: Image Synthesis using Neural Textures
 
 GeneBody Benchmark reivison of the implementation of paper "Deferred Neural Rendering: Image Synthesis using Neural Textures", Siggraph 2019. This repository borrows most of the code from the [Unoffical original implementation](https://github.com/SSRSGJYD/NeuralTexture).
 
