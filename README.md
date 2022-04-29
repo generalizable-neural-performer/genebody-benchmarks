@@ -7,9 +7,6 @@ This repository borrows most of the codes from the original [Pytorch implementat
 In CVPR 2020.</br>
 
 
-
-
-
 ## Installation
 The designed architecture follows this guide [PyTorch-Project-Template](https://github.com/L1aoXingyu/PyTorch-Project-Template), you can check each folder's purpose by yourself.
 
@@ -46,7 +43,7 @@ Please first `cd data/`, and then download datasets into `data/`. The organizati
 Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html) from OneDrive for training and evaluation.
 
 ## Evaluation
-First download our [pretrained models](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1) under the `${DATASET}/logs/${SUBJECT}` directory.
+First download our [pretrained models](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EvGHnCMrL2xPoFPu6Hs4d5IBMgfAi753agWjCPOltCJsoA?e=tizNoe) under the `./logs/${SUBJECT}` directory.
 
 You can use `${DATASET}/test_{DATASET}.py` to evaluate the pretrained model. For example, to obtain the PSNR, SSIM and LPIPS on  `DATASET` such as V-Sense, ZJUMocap and Genebody dataset, run:
 ```
@@ -55,7 +52,7 @@ python ${DATASET}/test_${DATASET}.py ${CONFIG_FILE_PATH} ${DATADIR} ${SUBJECT}
 
 For instance, to evaluate the pretrained model of the scene `amanda` of Genebody, run:
 ```
-python genebody/test_genebody.py configs/genebody.yml .data/genebody amanda
+python genebody/test_genebody.py configs/genebody.yml path_to_genebody amanda
 ```
 
 ## Training
@@ -65,7 +62,7 @@ python ${DATASET}/train_${DATASET}.py ${CONFIG_FILE_PATH} ${DATADIR} ${SUBJECT}}
 ```
 For instance, to train the model of the scene `amanda` of Genebody, run:
 ```
-python genebody/train_genebody.py configs/genebody.yml .data/genebody amanda
+python genebody/train_genebody.py configs/genebody.yml path_to_genebody amanda
 ```
 
 ## Citation
