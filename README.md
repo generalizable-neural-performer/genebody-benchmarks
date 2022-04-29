@@ -1,4 +1,4 @@
-# Genebody benchmark-IBRNet: Learning Multi-View Image-Based Rendering
+# Genebody benchmark - IBRNet: Learning Multi-View Image-Based Rendering
 Genebody Benchmark reivison of the implementation of paper "IBRNet: Learning Multi-View Image-Based Rendering", CVPR 2021. This repository borrows most of the code from the [original implementation](https://github.com/googleinterns/IBRNet).
 
 > IBRNet: Learning Multi-View Image-Based Rendering  
