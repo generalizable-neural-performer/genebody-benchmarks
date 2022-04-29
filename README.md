@@ -32,6 +32,14 @@ Please first `cd data/`, and then download datasets into `data/`. The organizati
 ├──genebody/
   ├──amanda/
   ├──barry/
+  ├──...
+├──vsense/
+  ├──loot/
+  ├──redandblack/
+  ├──...
+├──zju/
+  ├──CoreView313/
+  ├──...
 ```
 
 #### (a) **GeneBody**
@@ -48,18 +56,16 @@ python ${DATASET}/test_${DATASET}.py ${CONFIG_FILE_PATH} ${DATADIR} ${SUBJECT}
 For instance, to evaluate the pretrained model of the scene `amanda` of Genebody, run:
 ```
 python genebody/test_genebody.py configs/genebody.yml .data/genebody amanda
-
 ```
 
 ## Training
-You can use the API in `${DATASET}/train_{DATASET}.py` for training on a certain dataset.
+You can use the APIs in `${DATASET}/train_{DATASET}.py` for training on a certain dataset.
 ```
 python ${DATASET}/train_${DATASET}.py ${CONFIG_FILE_PATH} ${DATADIR} ${SUBJECT}}
 ```
 For instance, to train the model of the scene `amanda` of Genebody, run:
 ```
 python genebody/train_genebody.py configs/genebody.yml .data/genebody amanda
-
 ```
 
 ## Citation
@@ -70,6 +76,14 @@ python genebody/train_genebody.py configs/genebody.yml .data/genebody amanda
     publisher = {arXiv},
     year = {2022},
   }
+
+@inproceedings{wu2020multi,
+  title={Multi-View Neural Human Rendering},
+  author={Wu, Minye and Wang, Yuehao and Hu, Qiang and Yu, Jingyi},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={1682--1691},
+  year={2020}
+}
 ```
 
 
