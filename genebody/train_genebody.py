@@ -1,8 +1,8 @@
 import argparse
 import numpy as np
-import os
+import os, sys
 import random
-import tensorboardX
+from torch.utils.tensorboard import SummaryWriter
 import time
 import torch
 import torch.nn as nn
@@ -10,23 +10,28 @@ import torch.nn.functional as F
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 
+sys.path.insert(0, os.getcwd())
 import config
-from dataset.uv_dataset import UVDataset
+from genebody_dataset import GeneBodyDataset
 from model.pipeline import PipeLine
+from tqdm import tqdm, trange
+import imageio
+from util import natural_sort
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--texturew', type=int, default=config.TEXTURE_W)
-parser.add_argument('--textureh', type=int, default=config.TEXTURE_H)
+# parser.add_argument('--texturew', type=int, default=config.TEXTURE_W)
+# parser.add_argument('--textureh', type=int, default=config.TEXTURE_H)
+parser.add_argument('--loadSize', type=int,  default=512)
 parser.add_argument('--texture_dim', type=int, default=config.TEXTURE_DIM)
 parser.add_argument('--use_pyramid', type=bool, default=config.USE_PYRAMID)
 parser.add_argument('--view_direction', type=bool, default=config.VIEW_DIRECTION)
 parser.add_argument('--data', type=str, default=config.DATA_DIR, help='directory to data')
+# parser.add_argument('--annot', type=str, default=config.DATA_DIR, help='directory to annotation')
+parser.add_argument('--uv', type=str, help='directory to annotation')
 parser.add_argument('--checkpoint', type=str, default=config.CHECKPOINT_DIR, help='directory to save checkpoint')
 parser.add_argument('--logdir', type=str, default=config.LOG_DIR, help='directory to save checkpoint')
-parser.add_argument('--train', default=config.TRAIN_SET)
+parser.add_argument('--subject', default='fuzhizhi', type=str)
 parser.add_argument('--epoch', type=int, default=config.EPOCH)
-parser.add_argument('--cropw', type=int, default=config.CROP_W)
-parser.add_argument('--croph', type=int, default=config.CROP_H)
 parser.add_argument('--batch', type=int, default=config.BATCH_SIZE)
 parser.add_argument('--lr', type=float, default=config.LEARNING_RATE)
 parser.add_argument('--betas', type=str, default=config.BETAS)
@@ -53,26 +58,27 @@ def adjust_learning_rate(optimizer, epoch, original_lr):
 
 
 def main():
+    subject = args.subject
     named_tuple = time.localtime()
-    time_string = time.strftime("%m_%d_%Y_%H_%M", named_tuple)
-    log_dir = os.path.join(args.logdir, time_string)
+    # time_string = time.strftime("%m_%d_%Y_%H_%M", named_tuple)
+    log_dir = os.path.join(args.logdir, subject)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-    writer = tensorboardX.SummaryWriter(logdir=log_dir)
+    writer = SummaryWriter(log_dir)
+    if args.uv is None:
+        args.uv = args.data
 
-    checkpoint_dir = args.checkpoint + time_string
-    if not os.path.exists(checkpoint_dir):
-        os.makedirs(checkpoint_dir)
+    dataset = GeneBodyDataset(args.data, args.uv, args.loadSize, args.loadSize, subject, True, view_direction=args.view_direction)
+    dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=True, num_workers=5)
 
-    dataset = UVDataset(args.data, args.train, args.croph, args.cropw, args.view_direction)
-    dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=True, num_workers=4)
-
-    if args.load:
+    # if args.load:
+    pts = natural_sort([dir_ for dir_ in os.listdir(log_dir) if '.pt' in dir_])
+    if len(pts) > 0:
         print('Loading Saved Model')
-        model = torch.load(os.path.join(args.checkpoint, args.load))
+        model = torch.load(os.path.join(log_dir, pts[-1]))
         step = args.load_step
     else:
-        model = PipeLine(args.texturew, args.textureh, args.texture_dim, args.use_pyramid, args.view_direction)
+        model = PipeLine(args.loadSize, args.loadSize, args.texture_dim, args.use_pyramid, args.view_direction)
         step = 0
 
     l2 = args.l2.split(',')
@@ -80,6 +86,7 @@ def main():
     betas = args.betas.split(',')
     betas = [float(x) for x in betas]
     betas = tuple(betas)
+
     optimizer = Adam([
         {'params': model.texture.layer1, 'weight_decay': l2[0], 'lr': args.lr},
         {'params': model.texture.layer2, 'weight_decay': l2[1], 'lr': args.lr},
@@ -87,54 +94,39 @@ def main():
         {'params': model.texture.layer4, 'weight_decay': l2[3], 'lr': args.lr},
         {'params': model.unet.parameters(), 'lr': 0.1 * args.lr}],
         betas=betas, eps=args.eps)
-    model = model.to('cuda')
+    model = model.to(0)
     model.train()
     torch.set_grad_enabled(True)
     criterion = nn.L1Loss()
-
     print('Training started')
-    for i in range(1, 1+args.epoch):
-        print('Epoch {}'.format(i))
+    for i in trange(1, 1+args.epoch):
+        tqdm.write('Epoch {}'.format(i))
         adjust_learning_rate(optimizer, i, args.lr)
-        for samples in dataloader:
-            if args.view_direction:
-                images, uv_maps, extrinsics, masks = samples
-                # random scale
-                scale = 2 ** random.randint(-1,1)
-                images = F.interpolate(images, scale_factor=scale, mode='bilinear')
-                
-                uv_maps = uv_maps.permute(0, 3, 1, 2)
-                uv_maps = F.interpolate(uv_maps, scale_factor=scale, mode='bilinear')
-                uv_maps = uv_maps.permute(0, 2, 3, 1)
+        for samples in tqdm(dataloader):
+            images, uv_maps, extrinsics, masks = samples
+            images, uv_maps, extrinsics, masks = images.cuda(), uv_maps.cuda(), extrinsics.cuda(), masks.cuda()
+            step += images.shape[0]
+            optimizer.zero_grad()
+            RGB_texture, preds = model(uv_maps, extrinsics)
+            preds, pred_masks = torch.split(preds, [3,1], dim=1)
 
-                step += images.shape[0]
-                optimizer.zero_grad()
-                RGB_texture, preds = model(uv_maps.cuda(), extrinsics.cuda())
-            else:
-                images, uv_maps, masks = samples
-                # random scale
-                scale = 2 ** random.randint(-1,1)
-                images = F.interpolate(images, scale_factor=scale, mode='bilinear')
-                uv_maps = uv_maps.permute(0, 3, 1, 2)
-                uv_maps = F.interpolate(uv_maps, scale_factor=scale, mode='bilinear')
-                uv_maps = uv_maps.permute(0, 2, 3, 1)
-                
-                step += images.shape[0]
-                optimizer.zero_grad()
-                RGB_texture, preds = model(uv_maps.cuda())
+            images = masks * images
+            RGB_texture = RGB_texture * masks
+            preds = preds * masks
 
-            loss1 = criterion(RGB_texture.cpu(), images)
-            loss2 = criterion(preds.cpu(), images)
-            loss = loss1 + loss2
+            loss1 = criterion(RGB_texture, images)
+            loss2 = criterion(preds, images)
+            loss3 = criterion(pred_masks, masks) * 0.1
+            loss = loss1 + loss2 + loss3
             loss.backward()
             optimizer.step()
-            writer.add_scalar('train/loss', loss.item(), step)
-            print('loss at step {}: {}'.format(step, loss.item()))
-
+            if step % (args.batch * 20) == 0:
+                writer.add_scalar('train/loss', loss.item(), step)
+                tqdm.write(f'texture loss: {loss1.item():.3e} unet loss: {loss2.item():.3e} mask loss: {loss3.item():.3e}')
         # save checkpoint
         if i % args.epoch_per_checkpoint == 0:
-            print('Saving checkpoint')
-            torch.save(model, args.checkpoint+time_string+'/epoch_{}.pt'.format(i))
+            tqdm.write('Saving checkpoint')
+            torch.save(model, log_dir+'/epoch_{}.pt'.format(i))
 
 if __name__ == '__main__':
     main()

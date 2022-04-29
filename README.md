@@ -1,21 +1,16 @@
-# Neural Texture
+# GeneBody benchmark-IBRNet: Learning Multi-View Image-Based Rendering
 
-This repository implements [Deferred Neural Rendering: Image Synthesis using Neural Textures](https://arxiv.org/abs/1904.12356) .
+GeneBody Benchmark reivison of the implementation of paper "Deferred Neural Rendering: Image Synthesis using Neural Textures", Siggraph 2019. This repository borrows most of the code from the [Unoffical original implementation](https://github.com/SSRSGJYD/NeuralTexture).
 
 
 
-## Requirements
-
-+ Python 3.6+
-  + argparse
-  + nni
-  + NumPy
-  + Pillow
-  + pytorch
-  + tensorboardX
-  + torchvision
-  + tqdm
-
+## Installation
+The code is tested with Python3.7, PyTorch == 1.2 and CUDA == 10.0. We recommend you to use [anaconda](https://www.anaconda.com/) to make sure that all dependencies are in place. To create an anaconda environment:
+```
+conda env create -f environment.yml
+conda activate neuraltexture
+pip install -r requirements.txt
+```
 
 
 ## File Organization
@@ -26,70 +21,64 @@ The root directory contains several subdirectories and files:
 dataset/ --- custom PyTorch Dataset classes for loading included data
 model/ --- custom PyTorch Module classes
 util.py --- useful procedures
-render.py --- render using texture and U-Net
-render_texture.py --- render from RGB texture or neural texture
-train.py --- optimize texture and U-Net jointly
-train_texture.py --- optimize only texture
-train_unet.py --- optimize U-Net using pretrained 3-channel texture
+genebody/
+  genebody_dataset.py --- genebody dataloader
+  render_genebody.py --- render from RGB texture or neural texture
+  train_genebody.py --- optimize genebody texture and U-Net jointly
+zju/
+  ...
 ```
-
 
 
 ## How to Use
 
-### Set up Environment
+### 1. Prepare datasets
+```
+├──data/
+  ├──genebody/
+    ├──amanda/
+    ├──barry/
+```
+Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
 
-Install python >= 3.6 and create an environment.
 
-Install requirements:
+### 2. Render SMPLx UV images
+NeuralTexture requires the per-view UV data as the input of network, and take render `amanda` as an example, run
+```powershell
+python render_uv.py --datatype genebody --datadir path_to_genebody/amanda --workers 8
+```
+Then, in amanda/smpl_uv, the code generates per-view UV rendered images in EXR format.
+
+### 3. Train GeneBody
 
 ```powershell
-pip install -r requirements.txt
+python genebody/train_genebody.py --data path_to_genebody --subject amanda
 ```
 
-### Prepare Data
-
-We need 3 folders of data:
-
-+ `/data/frame/`  with video frames `.png` files
-+ `/data/uv/`  with uv-map `.npy` files, each shaped (H, W, 2)
-+ `/data/extrinsics/`  with normalized camera extrinsics in  `.npy` files, each shaped (3)
-
-Each frame corresponds to one uv map and corresponding camera extrinsic parameters. They are named sequentially, from `0000` to `xxxx` .
-
-We demonstrate 2 ways to prepare data. One way is to render training data, the code is at https://github.com/A-Dying-Pig/OpenGL_NeuralTexture. The other way is to reconstruct from real scene, the code is at https://github.com/gerwang/InfiniTAM .
-
-### Configuration
-
-Rename `config_example.py` as `config.py` and set the parameters for training and rendering.
-
-### Train Jointly
-
+### 4. Render GeneBody
 ```powershell
-python train.py [--args]
+python genebody/render_genebody.py --data path_to_genebody --subject amanda
 ```
 
-### Train Texture
-
-```powershell
-python train_texture.py [--args]
+## Citation
+If you find this repo is useful for your research, please cite the following papers
 ```
+@article{
+    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
+    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    publisher = {arXiv},
+    year = {2022},
+  }
 
-### Train U-Net
-
-```powershell
-python train_unet.py [--args]
-```
-
-### Render by Texture
-
-```powershell
-python render_texture.py [--args]
-```
-
-### Render by Texture and U-Net Jointly
-
-```powershell
-python render.py [--args]
+@article{thies2019deferred,
+  title={Deferred neural rendering: Image synthesis using neural textures},
+  author={Thies, Justus and Zollh{\"o}fer, Michael and Nie{\ss}ner, Matthias},
+  journal={ACM Transactions on Graphics (TOG)},
+  volume={38},
+  number={4},
+  pages={1--12},
+  year={2019},
+  publisher={ACM New York, NY, USA}
+}
 ```
 

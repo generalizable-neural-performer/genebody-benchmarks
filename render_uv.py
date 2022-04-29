@@ -11,12 +11,9 @@ from util import natural_sort
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
-parser.add_argument('--datatype', type = str, default = 'ghr')
-parser.add_argument('--datadir', type = str, default = '/data/ZJU_Mocap/CoreView_313')
-parser.add_argument('--outdir', type = str, default = os.path.join(base_dir,'..','..','data'))
-parser.add_argument('--annotdir', type = str, default = os.path.join(base_dir,'..','..','data'))
-parser.add_argument('--smpl', type = str, default = '/data/smpl/model/smpl/SMPL_NEUTRAL.pkl')
-parser.add_argument('--smpl_uv', type = str, default = './smpl_t_pose/smplx.obj')
+parser.add_argument('--datatype', type = str, default = 'genebody')
+parser.add_argument('--datadir', type = str, default = './genebody/amanda')
+parser.add_argument('--smpl_uv', type = str, default = './smpl_uv/smplx.obj')
 parser.add_argument('--workers', type = int, default = 8)
 
 def load_obj_mesh(mesh_file, with_normal=False, with_texture=False, with_texture_image=False):
@@ -425,7 +422,7 @@ def rasterize(v, tri, uv, uv_tri, size, K = np.identity(3), \
 
 def render_view(intri, dists, c2ws, plys, uv, uv_face, params, view, i):
 
-	out = os.path.join(args.outdir, os.path.basename(view))
+	out = os.path.join(args.datadir, 'smpl_uv', os.path.basename(view))
 	if not os.path.isdir(out):
 		os.makedirs(out, exist_ok=True)
 	else:
@@ -445,8 +442,6 @@ def render_view(intri, dists, c2ws, plys, uv, uv_face, params, view, i):
 				v = np.load(plys[k])
 			elif i < len(plys) and plys[k][-4:] == '.obj':
 				v, tri = load_obj_mesh(plys[k])
-			elif i < len(params):
-				v, tri = load_smpl(params[k], smpl_model)
 			else:
 				continue
 		except:
@@ -490,19 +485,18 @@ class Worker(Process):
 				render_view(**kwargs)
 
 
-def render_ghr(args):
+def render_genebody(args):
 	views = [os.path.join(args.datadir,'image', f) \
 		for f in os.listdir(os.path.join(args.datadir, 'image'))]
-	annot = np.load(os.path.join(args.annotdir), allow_pickle = True)
+	annot = np.load(os.path.join(args.datadir, 'annots.npy'), allow_pickle = True)
 	annot = np.reshape(annot,-1)[0]
 	intri = np.array(annot['cams']['K'], np.float32)
 	dists = np.array(annot['cams']['D'], intri.dtype)
 	c2ws  = np.concatenate([ \
 			annot['cams']['R'], \
 			annot['cams']['T'][:,:,None]],-1).astype(intri.dtype)
-	if args.outdir == '': args.outdir = '.'
-	if not os.path.isdir(args.outdir):
-		os.mkdir(args.outdir)
+			
+	# ZJU Mocap has very complicated smpl and vertices organization
 	if os.path.exists(os.path.join(args.datadir,'new_smpl')):
 		plys = [os.path.join(args.datadir,'new_smpl',f) \
 			for f in os.listdir(os.path.join(args.datadir,'new_smpl')) \
@@ -526,17 +520,10 @@ def render_ghr(args):
 		plys = [os.path.join(args.datadir,'vertices',f) \
 			for f in os.listdir(os.path.join(args.datadir,'vertices')) \
 			if f[-4:] == '.npy']
-		_, tri = load_obj_mesh('./smpl_t_pose/smplx.obj')
+		_, tri = load_obj_mesh(args.smpl_uv)
 		tri = tri.astype(np.int64)
 		plys = natural_sort(plys)
 		params = [] 
-	else:
-		plys  = []
-		smpl_model = SMPL(args.smpl)
-		params= [os.path.join(args.datadir,'params',f) \
-			for f in os.listdir(os.path.join(args.datadir,'params')) \
-			if f[-4:] == '.npy']
-		params = natural_sort(params)
 
 	_, _, uv, uv_face = load_obj_mesh(args.smpl_uv, with_texture=True)
 
@@ -581,13 +568,7 @@ def read_vsense_param(param_path):
 def render_vsense(args):
 	views = [os.path.join(args.datadir,'RENDER', f) \
 		for f in os.listdir(os.path.join(args.datadir, 'RENDER'))]
-	# annot = np.load(os.path.join(args.annotdir), allow_pickle = True)
-	# annot = np.reshape(annot,-1)[0]
-	# intri = np.array(annot['cams']['K'], np.float32)
-	# dists = np.array(annot['cams']['D'], intri.dtype)
-	# c2ws  = np.concatenate([ \
-	# 		annot['cams']['R'], \
-	# 		annot['cams']['T'][:,:,None]],-1).astype(intri.dtype)
+
 	views = natural_sort(views)
 	c2ws, intri = [], []
 	for view in views:
@@ -598,9 +579,6 @@ def render_vsense(args):
 			intri.append(K.copy())
 	c2ws = np.stack(c2ws).reshape(len(views),-1,3,4).astype(np.float32)
 	intri = np.stack(intri).reshape(len(views),-1,3,3).astype(np.float32)
-	if args.outdir == '': args.outdir = '.'
-	if not os.path.isdir(args.outdir):
-		os.mkdir(args.outdir)
 
 	plys = [os.path.join(args.datadir,'SMPL',f) \
 		for f in os.listdir(os.path.join(args.datadir,'SMPL')) \
@@ -640,7 +618,7 @@ def render_vsense(args):
 
 if __name__ == '__main__':
 	args  = parser.parse_args()
-	if args.datatype == 'ghr':
-		render_ghr(args)
+	if args.datatype == 'genebody':
+		render_genebody(args)
 	elif args.datatype == 'vsense':
 		render_vsense(args)

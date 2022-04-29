@@ -66,7 +66,7 @@ def main():
     if args.uv is None:
         args.uv = args.data
 
-    dataset = ZJUDataset(args.data, args.annot, args.uv, args.loadSize, args.loadSize, subject, True, view_direction=args.view_direction)
+    dataset = ZJUDataset(args.data, args.uv, args.loadSize, args.loadSize, subject, True, view_direction=args.view_direction)
     dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=True, num_workers=5)
 
     # if args.load:

@@ -22,7 +22,6 @@ parser.add_argument('--texture_dim', type=int, default=config.TEXTURE_DIM)
 parser.add_argument('--view_direction', type=bool, default=config.VIEW_DIRECTION)
 parser.add_argument('--use_pyramid', type=bool, default=config.USE_PYRAMID)
 parser.add_argument('--data', type=str, default=config.DATA_DIR, help='directory to data')
-parser.add_argument('--annot', type=str, default=config.DATA_DIR, help='directory to annotation')
 parser.add_argument('--uv', type=str, help='directory to annotation')
 parser.add_argument('--subject', type=str, help='directory to data')
 parser.add_argument('--test', default=config.TEST_SET, help='index list of test uv_maps')
@@ -41,7 +40,7 @@ if __name__ == '__main__':
 
     checkpoint_files = natural_sort([os.path.join(log_dir, pt_file) for pt_file in os.listdir(log_dir) if '.pt' in pt_file])
 
-    dataset = ZJUDataset(args.data, args.annot, args.uv, args.loadSize, args.loadSize, subject, False, 
+    dataset = ZJUDataset(args.data, args.uv, args.loadSize, args.loadSize, subject, False, 
                         view_direction=args.view_direction, eval_skip=15)
     dataloader = DataLoader(dataset, batch_size=1, shuffle=False, num_workers=4)
 

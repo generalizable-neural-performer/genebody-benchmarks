@@ -73,13 +73,12 @@ def image_cropping(mask):
 
 class ZJUDataset(Dataset):
 
-    def __init__(self, dir, annot, uv, H, W, subject, is_train, eval_skip=1, view_direction=False):
+    def __init__(self, dir, uv, H, W, subject, is_train, eval_skip=1, view_direction=False):
         # self.idx_list = idx_list
         # self.dir = dir
         # self.crop_size = (H, W)
         # self.view_direction = view_direction
         self.dir = dir
-        self.annot_path = annot
         self.uv_path = uv
         self.subject = subject
         self.is_train = is_train
