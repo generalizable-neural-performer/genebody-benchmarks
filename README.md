@@ -1,4 +1,4 @@
-# Genebody benchmark-Neural Volumes
+# Genebody benchmark - Neural Volumes
 
 This repository contains training and evaluation code for the paper 
 [Neural Volumes](https://arxiv.org/abs/1906.07751) to use [Genebody](https://generalizable-neural-performer.github.io/) and [V-sense](https://v-sense.scss.tcd.ie/news/v-sense-volumetric-video-quality-database/) dataset. Most of the code is borrowed from the [original implementation](https://github.com/facebookresearch/neuralvolumes).
