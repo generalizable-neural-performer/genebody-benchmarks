@@ -19,7 +19,7 @@ The code for each method is on the branches of this repository. To re-implement 
 ### Generalizable Methods on Genebody
 | Model  | PSNR | SSIM |LPIPS| ckpts|
 | :--- | :---------------:|:---------------:| :---------------:| :---------------:  |
-<!-- | [PixelNeRF](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/main)| 24.15   |0.903 | 0.122 | [ckpts]()| -->
+| [PixelNeRF (Our implemetation coming soon)](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/main)| 24.15   |0.903 | 0.122 | |
 | [IBRNet](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/ibrnet)| 23.61    |0.836 |  0.177 | [ckpts](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fwchengad%5Fconnect%5Fust%5Fhk%2FDocuments%2Fgenebody%2Dbenchmark%2Dpretrained%2Fibrnet)|
 ## Citation
 ```
