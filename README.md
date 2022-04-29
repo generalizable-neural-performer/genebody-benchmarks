@@ -41,7 +41,7 @@ Please download the GeneBody *Test10* subset from Onedrive [link](https://hkustc
 
 ### 2. Render SMPLx UV images
 NeuralTexture requires the per-view UV data of geometry proxy as the input of network, we use the SMPLx model as its proxy and render the UV image using following command. Take render `amanda` as an example, run
-```powershell
+```console
 python render_uv.py --datatype genebody --datadir path_to_genebody/amanda --workers 8
 ```
 Then, the code generates per-view UV rendered images in `amanda/smpl_uv` in EXR format.
