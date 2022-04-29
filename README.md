@@ -5,7 +5,6 @@ This repository contains training and evaluation code for the paper
 
 
 ## Installation
-
 * Python (3.6+)
   * PyTorch (1.2+)
   * NumPy
