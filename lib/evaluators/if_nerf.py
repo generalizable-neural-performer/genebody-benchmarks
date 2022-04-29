@@ -81,7 +81,7 @@ class Evaluator:
         img_gt = np.zeros((H, W, 3)) + white_bkgd
         img_gt[mask_at_box] = rgb_gt
         # fill holes
-        img_pred[np.sum(img_pred, axis=-1) < 1e-2] = 255
+        # img_pred[np.sum(img_pred, axis=-1) < 1e-2] = 255
         if cfg.eval_whole_img:
             rgb_pred = img_pred
             rgb_gt = img_gt

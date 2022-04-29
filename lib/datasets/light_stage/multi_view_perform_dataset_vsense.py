@@ -167,7 +167,6 @@ class Dataset(data.Dataset):
         coord = np.round((dhw - min_dhw) / voxel_size).astype(np.int32)
         # construct the output shape
         out_sh = np.ceil((max_dhw - min_dhw) / voxel_size).astype(np.int32)
-        # st()
         x = 32
         out_sh = (out_sh | (x - 1)) + 1
         return coord, out_sh, can_bounds, bounds, Rh, Th

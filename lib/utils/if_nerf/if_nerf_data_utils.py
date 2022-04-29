@@ -275,29 +275,12 @@ def sample_ray(img, msk, K, R, T, bounds, nrays, split):
 def sample_ray_h36m(img, msk, K, R, T, bounds, nrays, split, index=None):
     H, W = img.shape[:2]
     ray_o, ray_d = get_rays(H, W, K, R, T)
-    # save_ply2('ray_o.ply', ray_o.reshape(-1, 3))
-    # save_ply2('ray_d.ply', ray_d.reshape(-1, 3))
     pose = np.concatenate([R, T], axis=1) # 3, 1 + 3, 3 -> 3, 4
 
     bound_mask = get_bound_2d_mask(bounds, K, pose, H, W)
-    # homo_pose = np.concatenate([pose, [[0,0,0,1]]], 0).astype(np.float32)
-    # all_cam_poses.append(homo_pose)
-    # if len(all_cam_poses) == 5:
-    #     cam_pose_vis('cam_vis.obj', np.array(all_cam_poses), cds='cv', pose_type='w2c')
-    #     st()
-    # mask_inds = np.argwhere(msk == 100)
-    # min_x = np.min(mask_inds[:, 0])
-    # max_x = np.max(mask_inds[:, 0])
-    # min_y = np.min(mask_inds[:, 1])
-    # max_y = np.max(mask_inds[:, 1])
-    # bound_mask = np.zeros_like(msk)
-    # bound_mask[min_x: max_x, min_y: max_y] = 1.
+
     msk = msk * bound_mask
     bound_mask[msk == 100] = 0
-    # cv2.imwrite()
-    # cv2.imwrite(f'bound_mask_{index}.jpg', bound_mask * 255)
-    
-    # st()
 
     if split == 'train':
         nsampled_rays = 0
@@ -315,12 +298,10 @@ def sample_ray_h36m(img, msk, K, R, T, bounds, nrays, split, index=None):
             n_body = int((nrays - nsampled_rays) * body_sample_ratio)
             n_face = int((nrays - nsampled_rays) * face_sample_ratio)
             n_rand = (nrays - nsampled_rays) - n_body - n_face
-            # st()
             # sample rays on body
             coord_body = np.argwhere(msk == 1)
             coord_body = coord_body[np.random.randint(0, len(coord_body),
                                                       n_body)]
-            # st()
             # sample rays on face
             coord_face = np.argwhere(msk == 13)
             if len(coord_face) > 0:
@@ -329,7 +310,6 @@ def sample_ray_h36m(img, msk, K, R, T, bounds, nrays, split, index=None):
             # sample rays in the bound mask
             coord = np.argwhere(bound_mask == 1)
             coord = coord[np.random.randint(0, len(coord), n_rand)]
-            # st()
             if len(coord_face) > 0:
                 coord = np.concatenate([coord_body, coord_face, coord], axis=0)
             else:
@@ -338,9 +318,7 @@ def sample_ray_h36m(img, msk, K, R, T, bounds, nrays, split, index=None):
             ray_o_ = ray_o[coord[:, 0], coord[:, 1]]
             ray_d_ = ray_d[coord[:, 0], coord[:, 1]]
             rgb_ = img[coord[:, 0], coord[:, 1]]
-            # st()
             near_, far_, mask_at_box = get_near_far(bounds, ray_o_, ray_d_)
-            # st()
             ray_o_list.append(ray_o_[mask_at_box])
             ray_d_list.append(ray_d_[mask_at_box])
             rgb_list.append(rgb_[mask_at_box])
@@ -349,7 +327,6 @@ def sample_ray_h36m(img, msk, K, R, T, bounds, nrays, split, index=None):
             coord_list.append(coord[mask_at_box])
             mask_at_box_list.append(mask_at_box[mask_at_box])
             nsampled_rays += len(near_)
-            # st()
 
         ray_o = np.concatenate(ray_o_list).astype(np.float32)
         ray_d = np.concatenate(ray_d_list).astype(np.float32)

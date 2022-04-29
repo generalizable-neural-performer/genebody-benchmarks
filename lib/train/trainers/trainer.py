@@ -55,7 +55,6 @@ class Trainer(object):
                 print(e)
                 optimizer.zero_grad()
                 continue
-            # st()
             # training stage: loss; optimizer; scheduler
             optimizer.zero_grad()
             loss = loss.mean()

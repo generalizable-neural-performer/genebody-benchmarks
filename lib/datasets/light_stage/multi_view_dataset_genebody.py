@@ -217,7 +217,6 @@ class Dataset(data.Dataset):
             if cfg.white_bkgd:
                 img[msk == 0] = 1
         # msk = msk[..., None]
-        # st()
         i = int(os.path.basename(img_path)[:-4])
         frame_index = i
         coord, out_sh, can_bounds, bounds, Rh, Th = self.prepare_input(

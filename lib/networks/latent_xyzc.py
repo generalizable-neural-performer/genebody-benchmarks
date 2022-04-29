@@ -11,7 +11,7 @@ class Network(nn.Module):
         super(Network, self).__init__()
 
         # self.c = nn.Embedding(6890, 16)
-        self.c = nn.Embedding(10475, 16)
+        self.c = nn.Embedding(10475, 16) # FIXME: for smpl-x
         self.xyzc_net = SparseConvNet()
 
         self.latent = nn.Embedding(cfg.num_train_frame, 128)

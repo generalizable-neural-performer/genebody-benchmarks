@@ -132,10 +132,10 @@ novel_pose_cfg:
         sampler: ''
 
 mesh_cfg:
-    train_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_doom'
-    train_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_doom.py'
-    test_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_doom'
-    test_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_doom.py'
+    train_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_genebody'
+    train_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_genebody.py'
+    test_dataset_module: 'lib.datasets.light_stage.multi_view_mesh_dataset_genebody'
+    test_dataset_path: 'lib/datasets/light_stage/multi_view_mesh_dataset_genebody.py'
 
     network_module: 'lib.networks.latent_xyzc'
     network_path: 'lib/networks/latent_xyzc.py'

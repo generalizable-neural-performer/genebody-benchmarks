@@ -36,8 +36,6 @@ class Renderer(if_clight_renderer.Renderer):
             pts2d = pts2d[0]
             msk = batch['msks'][0, nv]
             inside = msk[pts2d[:, 1], pts2d[:, 0]][None].bool()
-            # from pdb import set_trace as st
-            # st()
             insides.append(inside)
 
         inside = insides[0]

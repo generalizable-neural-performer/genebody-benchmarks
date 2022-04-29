@@ -78,11 +78,8 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, max_iter=-1):
         drop_last = False
 
     dataset_name = cfg.train.dataset if is_train else cfg.test.dataset
-    # from pdb import set_trace as st
-    # st()
     transforms = make_transforms(cfg, is_train)
     dataset = make_dataset(cfg, dataset_name, transforms, is_train)
-    # st()
     sampler = make_data_sampler(dataset, shuffle, is_distributed, is_train)
     batch_sampler = make_batch_data_sampler(cfg, sampler, batch_size,
                                             drop_last, max_iter, is_train)
