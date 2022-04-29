@@ -66,10 +66,6 @@ if __name__ == "__main__":
     parser.add_argument('experconfig', type=str, help='experiment config file')
     parser.add_argument('--profile', type=str, default="Train", help='config profile')
     parser.add_argument('--datadir', type=str, default="data/vsense", help='directory for data')
-<<<<<<< HEAD
-    parser.add_argument('--annotdir', type=str, default="data/ours_calib/photoscan/camera_npy", help='directory for annotation')
-=======
->>>>>>> 4c6051fca4dc1d72c14c04d06cb1c0455d1d0eaf
     parser.add_argument('--subject', type=str, default="fuzhizhi", help='subject to train')
     parser.add_argument('--devices', type=int, nargs='+', default=[0], help='devices')
     parser.add_argument('--resume', action='store_true', help='resume training')
