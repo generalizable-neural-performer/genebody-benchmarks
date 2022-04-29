@@ -36,4 +36,11 @@ If you find this code useful for your research, please use the following BibTeX 
     publisher = {arXiv},
     year = {2022},
   }
+
+@inproceedings{peng2021neural,
+  title={Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans},
+  author={Peng, Sida and Zhang, Yuanqing and Xu, Yinghao and Wang, Qianqian and Shuai, Qing and Bao, Hujun and Zhou, Xiaowei},
+  booktitle={CVPR},
+  year={2021}
+}
 ```
