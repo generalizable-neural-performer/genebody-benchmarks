@@ -27,6 +27,7 @@ To render and evaluate a video of a trained model on GeneBody dataset, eg. `aman
 ```
 python render_genebody.py experiments/config_genebody.py --datadir path_to_genebody --subject amanda
 ```
+
 ## Training
 
 To train the model on GeneBody dataset:
