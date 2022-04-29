@@ -23,8 +23,18 @@ INPUT:
   USE_DIR: "MAPS" 
 
 DATASETS:
+<<<<<<< HEAD
+  TRAIN: ["./data/zjumocap"]
+  FRAME_NUM: [300]
+=======
+<<<<<<< HEAD:configs/vsense.yml
   TRAIN: [".data/vsense"]
   FRAME_NUM: [150]
+=======
+  TRAIN: ["./data/zjumocap"]
+  FRAME_NUM: [300]
+>>>>>>> 3c194e0482d789c61a8ee03bdf00e3996cb11737:configs/zju.yml
+>>>>>>> 3c194e0482d789c61a8ee03bdf00e3996cb11737
   MASK: True
   SHIFT: 40
   MAXRATION: -0.5
@@ -55,4 +65,12 @@ SOLVER:
 
 
 
+<<<<<<< HEAD
+OUTPUT_DIR: "./output/"
+=======
+<<<<<<< HEAD:configs/vsense.yml
 OUTPUT_DIR: "./logs/loot"
+=======
+OUTPUT_DIR: "./output/"
+>>>>>>> 3c194e0482d789c61a8ee03bdf00e3996cb11737:configs/zju.yml
+>>>>>>> 3c194e0482d789c61a8ee03bdf00e3996cb11737

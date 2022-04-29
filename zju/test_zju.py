@@ -6,7 +6,11 @@ from os import mkdir
 import numpy as np
 import torch
 import torch.nn.functional as F
+<<<<<<< HEAD
 sys.path.insert(0, os.getcwd())
+=======
+
+>>>>>>> 3c194e0482d789c61a8ee03bdf00e3996cb11737
 # sys.path.append('..')
 sys.path.append('.')
 from config import cfg
