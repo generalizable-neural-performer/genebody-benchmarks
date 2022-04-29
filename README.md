@@ -32,7 +32,7 @@ zju/
 ## How to Use
 
 ### 1. Prepare datasets
-Please download the GeneBody *Test10* subset from Onedrive [link](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EgWKPko5WXdClIg_zsjDSxwBH7LM4waKyJkWaslC-BVfSQ?e=JaDZdQ), and the dataset is organized as below.
+Please download the GeneBody *Test10* subset from Onedrive [link](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/Etg3LW44m61OjZOgDp-f4TcB85MjHXqWq9oCU8qh_DvwKw?e=SEp2ah), and the dataset is organized as below.
 ```
 ├──genebody/
   ├──amanda/
