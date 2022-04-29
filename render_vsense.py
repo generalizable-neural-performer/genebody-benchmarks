@@ -33,7 +33,6 @@ if __name__ == "__main__":
     parser.add_argument('experconfig', type=str, help='experiment config file')
     parser.add_argument('--profile', type=str, default="Render", help='config profile')
     parser.add_argument('--datadir', type=str, default="./data/vsense", help='directory for data')
-    parser.add_argument('--annotdir', type=str, default="./data/ours_calib/photoscan/camera_npy", help='directory for annotation')
     parser.add_argument('--subject', type=str, default="loot", help='subject to train')
     parser.add_argument('--devices', type=int, nargs='+', default=[0], help='devices')
     parsed, unknown = parser.parse_known_args()
@@ -53,7 +52,7 @@ if __name__ == "__main__":
     profile = getattr(experconfig, args.profile)(subject=args.subject, showtarget=True, showdiff=True, viewtemplate=False)
 
     # load datasets
-    dataset = profile.get_dataset(args.datadir, args.annotdir, args.subject)
+    dataset = profile.get_dataset(args.datadir, args.subject)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=16)
 
     # data writer

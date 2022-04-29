@@ -66,7 +66,6 @@ if __name__ == "__main__":
     parser.add_argument('experconfig', type=str, help='experiment config file')
     parser.add_argument('--profile', type=str, default="Train", help='config profile')
     parser.add_argument('--datadir', type=str, default="./data/genebody", help='directory for data')
-    parser.add_argument('--annotdir', type=str, default="./data/ours_calib/photoscan/camera_npy", help='directory for annotation')
     parser.add_argument('--subject', type=str, default="fuzhizhi", help='subject to train')
     parser.add_argument('--devices', type=int, nargs='+', default=[0], help='devices')
     parser.add_argument('--resume', action='store_true', help='resume training')
@@ -94,11 +93,11 @@ if __name__ == "__main__":
 
     # build dataset & testing dataset
     starttime = time.time()
-    testdataset = progressprof.get_dataset(args.datadir, args.annotdir, args.subject)
+    testdataset = progressprof.get_dataset(args.datadir, args.subject)
     dataloader = torch.utils.data.DataLoader(testdataset, batch_size=progressprof.batchsize, shuffle=False, drop_last=True, num_workers=0)
     for testbatch in dataloader:
         break
-    dataset = profile.get_dataset(args.datadir, args.annotdir, args.subject)
+    dataset = profile.get_dataset(args.datadir, args.subject)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=profile.batchsize, shuffle=True, drop_last=True, num_workers=16)
     print("Dataset instantiated ({:.2f} s)".format(time.time() - starttime))
 

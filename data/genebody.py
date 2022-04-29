@@ -54,14 +54,13 @@ def image_cropping(mask):
 
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, datadir, annotdir, subject, keyfilter,
+    def __init__(self, datadir, subject, keyfilter,
             fixedcammean=0., fixedcamstd=1., imagemean=0., 
             imagestd=1., subsampletype=None, subsamplesize=0,
             loadSize=512):
         # get options
         self.subject = subject
         self.datadir = datadir
-        self.annotdir = annotdir
         self.all_cameras = self.get_allcameras()
         self.cameras = list(range(48))
         self.cameras = [cam for cam in self.cameras if cam in self.all_cameras]

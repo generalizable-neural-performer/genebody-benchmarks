@@ -7,10 +7,9 @@
 import os
 import data.vsense as datamodel
 
-def get_dataset(datadir, annotdir, subject, subsampletype=None):
+def get_dataset(datadir, subject, subsampletype=None):
     return datamodel.Dataset(
         datadir,
-        annotdir,
         subject,
         keyfilter=["bg", "fixedcamimage", "camera", "image", "pixelcoords"],
         fixedcammean=100.,
@@ -41,8 +40,8 @@ class Train():
     batchsize=8
     maxiter=500000
     def get_autoencoder(self, dataset): return get_autoencoder(dataset)
-    def get_dataset(self, datadir, annotdir, subject): 
-        return get_dataset(datadir, annotdir, subject, subsampletype="random2")
+    def get_dataset(self, datadir, subject): 
+        return get_dataset(datadir, subject, subsampletype="random2")
     def get_optimizer(self, ae):
         import itertools
         import torch.optim
@@ -88,8 +87,8 @@ class Progress():
     """Write out diagnostic images during training."""
     batchsize=8
     def get_ae_args(self): return dict(outputlist=["irgbrec"])
-    def get_dataset(self, datadir, annotdir, subject): 
-        return get_dataset(datadir, annotdir, subject)
+    def get_dataset(self, datadir, subject): 
+        return get_dataset(datadir, subject)
     def get_writer(self): return ProgressWriter()
 
 class Render():
@@ -103,8 +102,8 @@ class Render():
         self.showdiff = showdiff
     def get_autoencoder(self, dataset): return get_autoencoder(dataset)
     def get_ae_args(self): return dict(outputlist=["irgbrec", "irgbsqerr"], viewtemplate=self.viewtemplate)
-    def get_dataset(self, datadir, annotdir, subject):
-        return get_dataset(datadir, annotdir, subject)
+    def get_dataset(self, datadir, subject):
+        return get_dataset(datadir, subject)
     def get_writer(self):
         import eval.writers.videowriter as writerlib
         return writerlib.Writer(
