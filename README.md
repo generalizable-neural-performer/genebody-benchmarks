@@ -13,16 +13,17 @@ Please first `cd data/`, and then download datasets into `data/`. The organizati
     ├──barry/
 ```
 
-## Evaluation
-To evaluate our pretrained models on Genebody, run:
-
-```
-python run.py  --type evaluate --cfg_file configs/genebody_test/amanda.yaml exp_name amanda test_novel_pose True
-```
 ## Training
 For training on a sequence of Genebody, run:
 ```
 python train_net.py --cfg_file configs/genebody_test/amanda.yaml exp_name amanda resume False
+```
+
+## Evaluation
+We provide our pretained models [here](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EvajPkSOLxtOrnzbTTiJ8KkB8qFzUwG6Y_guPMfMLElHOg?e=kJtl61). To evaluate our model or your trained model on Genebody, run:
+
+```
+python run.py  --type evaluate --cfg_file configs/genebody_test/amanda.yaml exp_name amanda test_novel_pose True
 ```
 
 ## Citation
