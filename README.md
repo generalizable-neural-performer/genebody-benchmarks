@@ -1,5 +1,5 @@
-# GNR benchmark-IBRNet: Learning Multi-View Image-Based Rendering
-GNR Benchmark reivison of the implementation of paper "IBRNet: Learning Multi-View Image-Based Rendering", CVPR 2021. This repository borrows most of the code from the [original implementation](https://github.com/googleinterns/IBRNet).
+# Genebody benchmark-IBRNet: Learning Multi-View Image-Based Rendering
+Genebody Benchmark reivison of the implementation of paper "IBRNet: Learning Multi-View Image-Based Rendering", CVPR 2021. This repository borrows most of the code from the [original implementation](https://github.com/googleinterns/IBRNet).
 
 > IBRNet: Learning Multi-View Image-Based Rendering  
 > [Qianqian Wang](https://www.cs.cornell.edu/~qqw/), [Zhicheng Wang](https://www.linkedin.com/in/zhicheng-wang-96116897/), [Kyle Genova](https://www.kylegenova.com/), [Pratul Srinivasan](https://pratulsrinivasan.github.io/), [Howard Zhou](https://www.linkedin.com/in/howard-zhou-0a34b84/), [Jonathan T. Barron](https://jonbarron.info), [Ricardo Martin-Brualla](http://www.ricardomartinbrualla.com/), [Noah Snavely](https://www.cs.cornell.edu/~snavely/), [Thomas Funkhouser](https://www.cs.princeton.edu/~funk/)    
@@ -14,15 +14,13 @@ conda activate ibrnet
 ```
 
 ## Datasets
-
-### 1. Training datasets
+Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
 ```
 ├──data/
     ├──genebody/
         ├──amanda/
         ├──barry/
 ```
-Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
 
 #### (a) **GeneBody**
 Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html) from OneDrive for training and evaluation.
@@ -56,11 +54,17 @@ python train.py --config configs/train_genebody.txt
 ```
 ## Citation
 ```
+@article{
+    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
+    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    publisher = {arXiv},
+    year = {2022},
+  }
+
 @inproceedings{wang2021ibrnet,
   author    = {Wang, Qianqian and Wang, Zhicheng and Genova, Kyle and Srinivasan, Pratul and Zhou, Howard  and Barron, Jonathan T. and Martin-Brualla, Ricardo and Snavely, Noah and Funkhouser, Thomas},
   title     = {IBRNet: Learning Multi-View Image-Based Rendering},
   booktitle = {CVPR},
   year      = {2021}
 }
-
 ```
