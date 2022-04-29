@@ -89,9 +89,6 @@ class Perceptual_loss(torch.nn.Module):
         #xgrad_x = gradient_1order(x[:,0:3,:,:])
         #xgrad_target = gradient_1order(target[:,0:3,:,:])
 
-
-
-
         feature_loss = (self.loss(x_feature.relu1,target_feature.relu1)+self.loss(x_feature.relu2,target_feature.relu2) ) /2.0
 
         if x.size(1)>3:

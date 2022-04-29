@@ -1,16 +1,11 @@
 import torch
 import torch.nn as nn
-import sys, os
-# sys.path.append('/mnt/lustre/xusu/Pointnet2.PyTorch')
-# sys.path.append('/home/SENSETIME/chengwei/Projects/nhr/thirdparty/Pointnet2.PyTorch')
-ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(os.path.abspath(os.path.join(ROOT_PATH, 'thirdparty', 'Pointnet2.PyTorch')))
 from pointnet2.pointnet2_modules import PointnetFPModule, PointnetSAModuleMSG
 import pointnet2.pytorch_utils as pt_utils
 
 
-def get_pn2_model(cfg, input_channels=0, out_dim = 32 ):
-    return Pointnet2MSG(input_channels=input_channels, out_dim = out_dim , npoints = cfg.MODEL.POINTNET_NPOINTS, radius = cfg.MODEL.POINTNET_RADIUS)
+def get_model(input_channels=0):
+    return Pointnet2MSG(input_channels=input_channels)
 
 
 NPOINTS = [4096, 1024, 256, 64]
@@ -18,19 +13,14 @@ RADIUS = [[0.1, 0.5], [0.5, 1.0], [1.0, 2.0], [2.0, 4.0]]
 NSAMPLE = [[16, 32], [16, 32], [16, 32], [16, 32]]
 MLPS = [[[16, 16, 32], [32, 32, 64]], [[64, 64, 128], [64, 96, 128]],
         [[128, 196, 256], [128, 196, 256]], [[256, 256, 512], [256, 384, 512]]]
-FP_MLPS = [[32, 32], [64, 64], [128, 128], [128, 128]]
+FP_MLPS = [[128, 128], [256, 256], [512, 512], [512, 512]]
 CLS_FC = [128]
-DP_RATIO = 0.4
+DP_RATIO = 0.5
 
 
 class Pointnet2MSG(nn.Module):
-    def __init__(self, input_channels=6, out_dim = 32, npoints = [4096, 1024, 256, 64], radius = [[0.1, 0.5], [0.5, 1.0], [1.0, 2.0], [2.0, 4.0]]):
+    def __init__(self, input_channels=6):
         super().__init__()
-
-        NPOINTS = npoints
-        RADIUS = radius
-
-        FP_MLPS[0] = [out_dim, out_dim]
 
         self.SA_modules = nn.ModuleList()
         channel_in = input_channels
@@ -64,9 +54,6 @@ class Pointnet2MSG(nn.Module):
                 PointnetFPModule(mlp=[pre_channel + skip_channel_list[k]] + FP_MLPS[k])
             )
 
-
-        '''
-
         cls_layers = []
         pre_channel = FP_MLPS[0][-1]
         for k in range(0, CLS_FC.__len__()):
@@ -75,7 +62,6 @@ class Pointnet2MSG(nn.Module):
         cls_layers.append(pt_utils.Conv1d(pre_channel, 1, activation=None))
         cls_layers.insert(1, nn.Dropout(0.5))
         self.cls_layer = nn.Sequential(*cls_layers)
-        '''
 
     def _break_up_pc(self, pc):
         xyz = pc[..., 0:3].contiguous()
@@ -100,5 +86,5 @@ class Pointnet2MSG(nn.Module):
                 l_xyz[i - 1], l_xyz[i], l_features[i - 1], l_features[i]
             )
 
-        #pred_cls = self.cls_layer(l_features[0]).transpose(1, 2).contiguous()  # (B, N, 1)
-        return l_features[0]  # only output features
+        pred_cls = self.cls_layer(l_features[0]).transpose(1, 2).contiguous()  # (B, N, 1)
+        return pred_cls

@@ -17,7 +17,7 @@ import cv2
 from scipy.spatial import KDTree
 import lpips
 
-lpips_net = lpips.LPIPS(net='alex')
+lpips_net = lpips.LPIPS(net='alex', verbose=True)
 def chamfer(x_verts, gt_verts, x_normals=None, gt_normals=None):
 
     searcher = KDTree(gt_verts)
@@ -113,12 +113,3 @@ def lpips(x, gt, net=lpips_net):
         loss = net.forward(x, gt)
     return loss.item()
 
-
-
-
-if __name__ == "__main__":
-    import trimesh
-    x = trimesh.load("./data/human/SMPL/10315_m_John/smpl.obj", process=False)
-    y = trimesh.load("./data/human/SMPL/10316_m_John/smpl.obj", process=False)
-
-    print(chamfer(x.vertices, y.vertices, x.vertex_normals, y.vertex_normals))

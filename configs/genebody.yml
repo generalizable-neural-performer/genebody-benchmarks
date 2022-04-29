@@ -1,6 +1,6 @@
 MODEL:
   FEATURE_DIM: 18
-  RESUME_EPOCH: 0
+  RESUME_EPOCH: 13
   NO_FEATURE_ONLY_RGB: False
   LOSS: "L1"
   USE_DEPTH: True
@@ -15,39 +15,36 @@ MODEL:
 
 
 INPUT:
-  # SIZE_TRAIN: [800,600]
-  SIZE_TRAIN: [512, 512]
-  # SIZE_TEST: [800,600]
-  SIZE_TEST: [512, 512]
+  SIZE_TRAIN: [1024, 1024]
+  SIZE_TEST: [1024, 1024]
   NEAR_FAR_SIZE: [[1.0, 8.5, 0.8]]
   USE_RGB: True
   RGB_MAP: False
   USE_DIR: "MAPS" 
 
 DATASETS:
-  TRAIN: ["/mnt/lustre/share_data/xusu/V-sense/vsense"]
-  FRAME_NUM: [150]
+  TRAIN: ["./data/genebody"]
+  FRAME_NUM: [75]
   MASK: True
   SHIFT: 40
   MAXRATION: -0.5
-  SUBJECT: 'loot'
   ROTATION: 10.0
-  #Holes: ["/data/wmy/NR/sfs/sport1_sfs_rotation_2_21_3","/data/wmy/NR/sfs/sport2_sfs_5","/data/wmy/NR/sfs/sport3_sfs_tmpn_5","None","/data/wmy/NR/sfs/basketball_ps_sfs_5"]
-  #RANDOM_NOISY: 0.0
+  SUBJECT: 'natacha'
   SKIP_STEP : [1] 
   IGNORE_FRAMES: [[]]
-  MOVE_CAM: 150
+  MOVE_CAM: 0
+  CROP: False
 
 
 SOLVER:
   OPTIMIZER_NAME: "Adam"
-  BASE_LR: 0.00005
+  BASE_LR: 0.00001
   WEIGHT_DECAY: 0.000003
   IMS_PER_BATCH: 2
   WARMUP_FACTOR: 0.333
   WARMUP_ITERS: 3
   WARMUP_METHOD: "linear"
-  MAX_EPOCHS: 30
+  MAX_EPOCHS: 100
   CHECKPOINT_PERIOD: 1
 
   START_ITERS: 5
@@ -58,4 +55,4 @@ SOLVER:
 
 
 
-OUTPUT_DIR: "./output/debug"
+OUTPUT_DIR: "./logs/natacha"

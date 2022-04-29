@@ -10,16 +10,14 @@ import sys
 from os import mkdir
 # from apex import amp
 import shutil
-from pdb import set_trace as st
+
 
 # In[ ]:
 
 
 import torch.nn.functional as F
 
-sys.path.append('./')
-sys.path.append('../')
-
+sys.path.append('..')
 from config import cfg
 from data import make_data_loader
 from engine.trainer import do_train
@@ -30,7 +28,6 @@ from layers import make_loss
 from utils.logger import setup_logger
 
 from torch.utils.tensorboard import SummaryWriter
-# from tensorboard import SummaryWriter
 import torch
 torch.cuda.set_device(int(sys.argv[1]))
 
@@ -38,7 +35,7 @@ torch.cuda.set_device(int(sys.argv[1]))
 # In[ ]:
  
 
-cfg.merge_from_file(sys.argv[2])
+cfg.merge_from_file('../configs/config.yml')
 cfg.freeze()
 
 

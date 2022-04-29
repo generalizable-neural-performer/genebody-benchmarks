@@ -1,20 +1,10 @@
-# Genebody Benchmark-Multi-view Neural Human Rendering (NHR)
+# Genebody Benchmark - Multi-view Neural Human Rendering (NHR)
 
 This repository borrows most of the codes from the original [Pytorch implementation of NHR](https://github.com/wuminye/NHR).
 
 **Multi-view Neural Human Rendering** </br>
 [Minye Wu](https://github.com/wuminye), [Yuehao Wang](https://github.com/yuehaowang), Qiang Hu, Jingyi Yu.</br>
 In CVPR 2020.</br>
-
-
-
-## Licenses
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-
-All material is made available under [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) license. You can **use, redistribute, and adapt** the material for **non-commercial purposes**, as long as you give appropriate credit by **citing our paper** and **indicating any changes** that you've made.
-
-
 
 
 
@@ -39,10 +29,9 @@ Dependencies:
 ## Datasets
 Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
 ```
-├──data/
-    ├──genebody/
-        ├──amanda/
-        ├──barry/
+├──genebody/
+  ├──amanda/
+  ├──barry/
 ```
 
 #### (a) **GeneBody**
@@ -76,3 +65,10 @@ Note that the `DATASETS.TRAIN` in the config file should be changed accordingly.
     year = {2022},
   }
 ```
+
+
+## Licenses
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+All material is made available under [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) license. You can **use, redistribute, and adapt** the material for **non-commercial purposes**, as long as you give appropriate credit by **citing our paper** and **indicating any changes** that you've made.
