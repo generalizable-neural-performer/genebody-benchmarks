@@ -50,13 +50,11 @@ class PCPRFunction(torch.autograd.Function):
         beg = 0
 
         for i in range(batch_size):
-            
             #print('Start Kernel.',flush = True)
             out_depth[i][0], out_index[i] = pcpr.forward(point_clouds[beg:beg+_num_points[i],:],
                    cam_intrinsic[i], _cam_extrinsic[i], out_depth[i][0], out_index[i],
                     *(near_far_max_splatting_size[i].tolist()) )
             #print('End Kernel.',flush = True)
-            
             
             features = point_features[:,beg:beg+_num_points[i]].detach()
           

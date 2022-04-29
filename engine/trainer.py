@@ -5,6 +5,7 @@ import torch
 
 from ignite.engine import Events, Engine
 from ignite.handlers import ModelCheckpoint, Timer
+from ignite.contrib.handlers import ProgressBar
 from ignite.metrics import Accuracy, Loss, RunningAverage
 
 # from apex import amp
@@ -180,7 +181,8 @@ def do_train(
 
     RunningAverage(output_transform=lambda x: x).attach(trainer, 'avg_loss')
 
-
+    pbar = ProgressBar()
+    pbar.attach(trainer)
 
 
     @trainer.on(Events.STARTED)

@@ -51,7 +51,7 @@ _C.INPUT.PIXEL_MEAN = [0.485, 0.456, 0.406]
 _C.INPUT.PIXEL_STD = [0.229, 0.224, 0.225]
 _C.INPUT.NEAR_FAR_SIZE = [[1000, 3600, 1.5]]
 _C.INPUT.USE_RGB = True
-_C.INPUT.RGB_MAP = False
+_C.INPUT.RGB_MAP = True
 
 _C.INPUT.USE_DIR = "MAPS"
 
@@ -63,6 +63,8 @@ _C.DATASETS = CN()
 _C.DATASETS.TRAIN = ["./"]
 # List of the dataset names for testing, as present in paths_catalog.py
 _C.DATASETS.TEST = ()
+_C.DATASETS.ANNOT = ["./"]
+_C.DATASETS.PC = ["./"]
 _C.DATASETS.FRAME_NUM = [20]
 _C.DATASETS.MASK = False
 _C.DATASETS.SHIFT = 0
@@ -75,13 +77,15 @@ _C.DATASETS.HOLES = ["None"]
 _C.DATASETS.IGNORE_FRAMES = []
 _C.DATASETS.SUBJECT = 'loot'
 _C.DATASETS.MOVE_CAM = 0
+_C.DATASETS.CROP = False
+_C.DATASETS.PC_UPSAMPLE = 0
 
 # -----------------------------------------------------------------------------
 # DataLoader
 # -----------------------------------------------------------------------------
 _C.DATALOADER = CN()
 # Number of data loading threads
-_C.DATALOADER.NUM_WORKERS = 0
+_C.DATALOADER.NUM_WORKERS = 5
 
 # ---------------------------------------------------------------------------- #
 # Solver

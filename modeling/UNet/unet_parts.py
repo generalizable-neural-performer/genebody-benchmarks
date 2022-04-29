@@ -1,7 +1,6 @@
 # sub-parts of the U-Net model
 
-import sys
-sys.path.append('/mnt/lustre/xusu/Tasks/NHR/')
+import sys, os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

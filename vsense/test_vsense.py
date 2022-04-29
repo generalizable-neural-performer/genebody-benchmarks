@@ -14,13 +14,14 @@ from data import make_data_loader
 from torch.utils.tensorboard import SummaryWriter
 import cv2
 from pdb import set_trace as st
-from metrics import ssim, lpips, psnr
+from tools.metrics import ssim, lpips, psnr
 
 torch.cuda.set_device(0)
 
 
+cfg_file, dataset_dir, subject = sys.argv[1], sys.argv[2], sys.argv[3]
 
-cfg.merge_from_file(sys.argv[1])
+cfg.merge_from_file(cfg_file)
 cfg.SOLVER.IMS_PER_BATCH = 1
 cfg.freeze()
 

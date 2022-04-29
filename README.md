@@ -1,20 +1,10 @@
-# GNR Benchmark-Multi-view Neural Human Rendering (NHR)
+# Genebody Benchmark - Multi-view Neural Human Rendering (NHR)
 
 This repository borrows most of the codes from the original [Pytorch implementation of NHR](https://github.com/wuminye/NHR).
 
 **Multi-view Neural Human Rendering** </br>
 [Minye Wu](https://github.com/wuminye), [Yuehao Wang](https://github.com/yuehaowang), Qiang Hu, Jingyi Yu.</br>
 In CVPR 2020.</br>
-
-
-
-## Licenses
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-
-All material is made available under [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) license. You can **use, redistribute, and adapt** the material for **non-commercial purposes**, as long as you give appropriate credit by **citing our paper** and **indicating any changes** that you've made.
-
-
 
 
 
@@ -39,41 +29,52 @@ Dependencies:
 ## Datasets
 Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
 ```
-├──data/
-    ├──genebody/
-        ├──amanda/
-        ├──barry/
+├──genebody/
+  ├──amanda/
+  ├──barry/
 ```
 
 #### (a) **GeneBody**
 Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html) from OneDrive for training and evaluation.
 
 ## Evaluation
-First download our [pretrained models](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1) under the project `tools/output/${SUBJECT}` directory.
+First download our [pretrained models](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1) under the `${DATASET}/logs/${SUBJECT}` directory.
 
-You can use `tools/test.py` to evaluate the pretrained model. For example, to obtain the PSNR, SSIM and LPIPS on the *amanda* scene on V-Sense dataset, run:
+You can use `${DATASET}/test_{DATASET}.py` to evaluate the pretrained model. For example, to obtain the PSNR, SSIM and LPIPS on  `DATASET` such as V-Sense, ZJUMocap and Genebody dataset, run:
 ```
-cd tools/
-python test.py ../configs/redandblack.yml
+python ${DATASET}/test_${DATASET}.py ${CONFIG_FILE_PATH} ${DATADIR} ${SUBJECT}
 ``` 
-Note that the `DATASETS.TRAIN` in the config file should be changed accordingly.
 
+For instance, to evaluate the pretrained model of the scene `amanda` of Genebody, run:
+```
+python genebody/test_genebody.py configs/genebody.yml .data/genebody amanda
+
+```
 
 ## Training
-You can use the API in `tools/train_net.py` for training on V-Sense dataset.
+You can use the API in `${DATASET}/train_{DATASET}.py` for training on a certain dataset.
 ```
-cd tools/
-python train_net_vsense.py 0 ../configs/redandblack.yml
+python ${DATASET}/train_${DATASET}.py ${CONFIG_FILE_PATH} ${DATADIR} ${SUBJECT}}
 ```
-Note that the `DATASETS.TRAIN` in the config file should be changed accordingly.
+For instance, to train the model of the scene `amanda` of Genebody, run:
+```
+python genebody/train_genebody.py configs/genebody.yml .data/genebody amanda
+
+```
 
 ## Citation
 ```
-@inproceedings{wu2020multi,
-  title={Multi-View Neural Human Rendering},
-  author={Wu, Minye and Wang, Yuehao and Hu, Qiang and Yu, Jingyi},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={1682--1691},
-  year={2020}
-}
+@article{
+    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
+    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    publisher = {arXiv},
+    year = {2022},
+  }
 ```
+
+
+## Licenses
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+All material is made available under [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) license. You can **use, redistribute, and adapt** the material for **non-commercial purposes**, as long as you give appropriate credit by **citing our paper** and **indicating any changes** that you've made.

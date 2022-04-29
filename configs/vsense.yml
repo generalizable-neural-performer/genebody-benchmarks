@@ -25,7 +25,7 @@ INPUT:
   USE_DIR: "MAPS" 
 
 DATASETS:
-  TRAIN: ["/mnt/lustre/share_data/xusu/V-sense/vsense"]
+  TRAIN: [".data/vsense"]
   FRAME_NUM: [150]
   MASK: True
   SHIFT: 40
@@ -58,4 +58,4 @@ SOLVER:
 
 
 
-OUTPUT_DIR: "./output/loot"
+OUTPUT_DIR: "./logs/loot"
