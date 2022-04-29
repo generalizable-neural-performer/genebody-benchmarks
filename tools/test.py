@@ -10,17 +10,9 @@ import torch.nn.functional as F
 sys.path.append('..')
 from config import cfg
 from data import make_data_loader
-from engine.trainer import do_train
-from modeling import build_model
-from solver import make_optimizer, WarmupMultiStepLR
-from layers import make_loss
 
-from utils.logger import setup_logger
-from utils.feats_pca import feats_map_pca_projection,feats_pca_projection
-import matplotlib.pyplot as plt
 from torch.utils.tensorboard import SummaryWriter
 import cv2
-from imageio_ffmpeg import write_frames
 from pdb import set_trace as st
 from metrics import ssim, lpips, psnr
 
@@ -29,13 +21,10 @@ torch.cuda.set_device(0)
 
 
 cfg.merge_from_file(sys.argv[1])
-#cfg.INPUT.SIZE_TRAIN = [1000,750]
-#cfg.INPUT.SIZE_TEST = [1000,750]
 cfg.SOLVER.IMS_PER_BATCH = 1
 cfg.freeze()
 
 epoch = 30
-import glob
 model_path =cfg.OUTPUT_DIR
 
 para_file = model_path + '/nr_model_%d.pth' % epoch

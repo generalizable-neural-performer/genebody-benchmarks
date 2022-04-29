@@ -13,53 +13,6 @@ import struct
 
 
 
-def rot2euler(R):
-    phi = np.arctan2(R[1,2], R[2,2])
-    theta = -np.arcsin(R[0,2])
-    psi = np.arctan2(R[0,1], R[0,0])
-    return np.array([phi, theta, psi])
-
-def euler2rot(euler):
-    sin, cos = np.sin, np.cos
-    phi, theta, psi = euler[0], euler[1], euler[2]
-    R1 = np.array([[1, 0, 0],
-                [0, cos(phi), sin(phi)],
-                [0, -sin(phi), cos(phi)]])
-    R2 = np.array([[cos(theta), 0, -sin(theta)],
-                [0, 1, 0],
-                [sin(theta), 0, cos(theta)]])
-    R3 = np.array([[cos(psi), sin(psi), 0],
-                [-sin(psi), cos(psi), 0],
-                [0, 0, 1]])
-    R = R1 @ R2 @ R3
-    return R
-
-
-def circle_path_from_smpl(smpl_verts, intrinsic, img_size, num_views):
-    # smpl_min, smpl_max = smpl_verts.min(0), smpl_verts.max(0)
-    intrinsic = intrinsic.numpy()
-    smpl_verts = smpl_verts.numpy()
-    img_size = img_size[0]
-    smpl_min, smpl_max = np.min(smpl_verts), np.max(smpl_verts)
-    center = (smpl_min + smpl_max) / 2
-    render_poses = []
-    fx, fy = intrinsic[0], intrinsic[1]
-    height = (smpl_max - smpl_min)
-    rad = height / (img_size * 0.8) * fy
-    gl2cv = np.array([[1,0,0],[0,-1,0],[0,0,-1]])
-    for theta in np.linspace(0, np.pi*2, num_views+1)[:-1]:
-        euler = [0, theta+np.pi/2, 0]
-        R = euler2rot(euler)
-        t = np.array([np.cos(theta), 0, -np.sin(theta)]) * rad + center
-        Rt = np.eye(4)
-        Rt[:3,:3] = gl2cv@R
-        Rt[:3, 3] = t
-        # render_poses.append(torch.from_numpy(np.linalg.inv(Rt)).float())        
-        render_poses.append(torch.from_numpy(Rt).float())        
-
-    return render_poses
-
-
 def load_ply(file_name):
 	try:
 		fid = open(file_name, 'r')
@@ -173,19 +126,15 @@ class VsenseDataset(torch.utils.data.Dataset):
         # st()
         print(f'from {self.start_idx} to {self.end_idx}')
         self.ims = self.ims[self.start_idx : self.end_idx]
-        self.frame_num = self.end_idx - self.start_idx
+        self.ims = self.ims[:10] # FIXME
+        self.frame_num = len(self.ims)
         self.vs = []
         self.vs_rgb = []
         self.vs_num = []
         self.vs_index =[]
         sum_tmp = 0
         for i, im_name in enumerate(self.ims):
-            #tmp = np.loadtxt(os.path.join(data_folder_path,'pointclouds/frame%d.obj' % (i+1)), usecols = (1,2,3,4,5,6))
-            # tmp = np.load(os.path.join(data_folder_path,'pointclouds/frame%d.npy' % (i+1)))
             tmp, _ = load_ply(os.path.join(data_folder_path, subject, 'GEO/OBJ', im_name + '.ply'))
-            # num_verts = tmp.shape[0]
-            # random_inds = np.random.randint(num_verts, size=int(0.01 * num_verts))
-            # tmp = tmp[random_inds, :]
             vs_tmp = tmp[:,0:3] 
             vs_rgb_tmp = tmp[:,3:6]
             self.vs_index.append(sum_tmp)
@@ -254,10 +203,8 @@ class VsenseDataset(torch.utils.data.Dataset):
                 self.Ks.append(np.float32(K))
                 self.Ts.append(np.float32(np.linalg.inv(extrinsic)))
 
-        # st()
         self.Ks = np.array(self.Ks)
         self.Ts = np.array(self.Ts)
-        # st()
         self.Ks = torch.from_numpy(self.Ks)
         self.Ts = torch.from_numpy(self.Ts)
         self.cam_num = self.Ts.size(0)

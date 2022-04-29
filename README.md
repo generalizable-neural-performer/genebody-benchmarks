@@ -1,8 +1,7 @@
-# Multi-view Neural Human Rendering (NHR) [[Paper]](http://openaccess.thecvf.com/content_CVPR_2020/papers/Wu_Multi-View_Neural_Human_Rendering_CVPR_2020_paper.pdf) [[Project Page]](https://wuminye.github.io/NHR/) 
+# GNR Benchmark-Multi-view Neural Human Rendering (NHR)
 
-Pytorch implementation of NHR.
+This repository borrows most of the codes from the original [Pytorch implementation of NHR](https://github.com/wuminye/NHR).
 
-![framework](docs/figures/concept.png)
 **Multi-view Neural Human Rendering** </br>
 [Minye Wu](https://github.com/wuminye), [Yuehao Wang](https://github.com/yuehaowang), Qiang Hu, Jingyi Yu.</br>
 In CVPR 2020.</br>
