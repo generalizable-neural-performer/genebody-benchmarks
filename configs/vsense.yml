@@ -29,7 +29,7 @@ DATASETS:
   SHIFT: 40
   MAXRATION: -0.5
   ROTATION: 10.0
-  SUBJECT: 'CoreView_396'
+  SUBJECT: 'redandblack'
   SKIP_STEP : [1] 
   IGNORE_FRAMES: [[]]
   MOVE_CAM: 0
@@ -55,4 +55,4 @@ SOLVER:
 
 
 
-OUTPUT_DIR: "./logs/loot"
+OUTPUT_DIR: "./logs/redandblack"

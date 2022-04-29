@@ -8,6 +8,7 @@ from os import mkdir
 # from apex import amp
 import shutil
 from pdb import set_trace as st
+sys.path.insert(0, os.getcwd())
 
 import torch.nn.functional as F
 
@@ -34,7 +35,7 @@ if __name__ == '__main__':
     cfg_file, dataset_dir, subject = sys.argv[1], sys.argv[2], sys.argv[3]
     cfg.merge_from_file(cfg_file)
     cfg.OUTPUT_DIR = f'./logs/{subject}'
-    cfg.DATASET.TRAIN = dataset_dir
+    cfg.DATASETS.TRAIN = [dataset_dir]
     cfg.DATASETS.SUBJECT = subject
     cfg.freeze()
     output_dir = cfg.OUTPUT_DIR
