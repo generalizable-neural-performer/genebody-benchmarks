@@ -1,4 +1,4 @@
-# GNR Benchmark-Multi-view Neural Human Rendering (NHR)
+# Genebody Benchmark-Multi-view Neural Human Rendering (NHR)
 
 This repository borrows most of the codes from the original [Pytorch implementation of NHR](https://github.com/wuminye/NHR).
 
@@ -69,11 +69,10 @@ Note that the `DATASETS.TRAIN` in the config file should be changed accordingly.
 
 ## Citation
 ```
-@inproceedings{wu2020multi,
-  title={Multi-View Neural Human Rendering},
-  author={Wu, Minye and Wang, Yuehao and Hu, Qiang and Yu, Jingyi},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={1682--1691},
-  year={2020}
-}
+@article{
+    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
+    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    publisher = {arXiv},
+    year = {2022},
+  }
 ```

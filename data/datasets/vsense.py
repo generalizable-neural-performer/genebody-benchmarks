@@ -126,7 +126,7 @@ class VsenseDataset(torch.utils.data.Dataset):
         # st()
         print(f'from {self.start_idx} to {self.end_idx}')
         self.ims = self.ims[self.start_idx : self.end_idx]
-        self.ims = self.ims[:10] # FIXME
+        # self.ims = self.ims[:10] # FIXME
         self.frame_num = len(self.ims)
         self.vs = []
         self.vs_rgb = []
