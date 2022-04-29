@@ -4,7 +4,7 @@ This repository contains the training and evaluation code for [NeuralBody](https
 The code for each method is on the branches of this repository. To re-implement the results on GeneBody, please download the pretrained models in the [Model Zoo](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EpsK3TaBfGBBgtDlcWV6nxABoQeBmGUtFmDy-XQQE1jaiQ?e=QmNQbP) first, and prepare the environment and dataset based on the `README.md` on each branch.
 
 ## News
-**[29/04/22]**: First version of benchmarks released, containing 4 case-specific methods and 2 generalizable methods.
+**[29/04/22]**: First version of benchmarks released, containing 5 case-specific methods and 1 generalizable methods.
 ## Benchmarks
 ### Case-specific Methods on Genebody
 | Model  | PSNR | SSIM |LPIPS| ckpts|
