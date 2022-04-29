@@ -4,6 +4,7 @@ import argparse
 import struct
 import sys
 import cv2, imageio
+imageio.plugins.freeimage.download()
 import os
 import re
 from multiprocessing import Queue, Lock, Process
@@ -12,8 +13,9 @@ from util import natural_sort
 base_dir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('--datatype', type = str, default = 'genebody')
-parser.add_argument('--datadir', type = str, default = './genebody/amanda')
-parser.add_argument('--smpl_uv', type = str, default = './smpl_uv/smplx.obj')
+parser.add_argument('--datadir', type = str, default = './genebody')
+parser.add_argument('--subject', type = str, default = 'amanda')
+parser.add_argument('--smpl_uv', type = str, default = './smpl_uv/smplx_uv.obj')
 parser.add_argument('--workers', type = int, default = 8)
 
 def load_obj_mesh(mesh_file, with_normal=False, with_texture=False, with_texture_image=False):
@@ -422,7 +424,7 @@ def rasterize(v, tri, uv, uv_tri, size, K = np.identity(3), \
 
 def render_view(intri, dists, c2ws, plys, uv, uv_face, params, view, i):
 
-	out = os.path.join(args.datadir, 'smpl_uv', os.path.basename(view))
+	out = os.path.join(args.datadir, args.subject, 'smpl_uv', os.path.basename(view))
 	if not os.path.isdir(out):
 		os.makedirs(out, exist_ok=True)
 	else:
@@ -486,9 +488,9 @@ class Worker(Process):
 
 
 def render_genebody(args):
-	views = [os.path.join(args.datadir,'image', f) \
-		for f in os.listdir(os.path.join(args.datadir, 'image'))]
-	annot = np.load(os.path.join(args.datadir, 'annots.npy'), allow_pickle = True)
+	views = [os.path.join(args.datadir, args.subject,'image', f) \
+		for f in os.listdir(os.path.join(args.datadir, args.subject, 'image'))]
+	annot = np.load(os.path.join(args.datadir, args.subject, 'annots.npy'), allow_pickle = True)
 	annot = np.reshape(annot,-1)[0]
 	intri = np.array(annot['cams']['K'], np.float32)
 	dists = np.array(annot['cams']['D'], intri.dtype)
@@ -497,28 +499,28 @@ def render_genebody(args):
 			annot['cams']['T'][:,:,None]],-1).astype(intri.dtype)
 			
 	# ZJU Mocap has very complicated smpl and vertices organization
-	if os.path.exists(os.path.join(args.datadir,'new_smpl')):
-		plys = [os.path.join(args.datadir,'new_smpl',f) \
-			for f in os.listdir(os.path.join(args.datadir,'new_smpl')) \
-			if f[-4:] == '.ply']
+	if os.path.exists(os.path.join(args.datadir, args.subject,'new_smpl')):
+		plys = [os.path.join(args.datadir, args.subject,'new_smpl',f) \
+			for f in os.listdir(os.path.join(args.datadir, args.subject,'new_smpl')) \
+			if f[-4:] == '.ply' or f[-4:] == '.obj']
 		plys = natural_sort(plys)
 		params = []
-	elif os.path.exists(os.path.join(args.datadir,'smpl')):
-		plys = [os.path.join(args.datadir,'smpl',f) \
-			for f in os.listdir(os.path.join(args.datadir,'smpl')) \
-			if f[-4:] == '.ply']
+	elif os.path.exists(os.path.join(args.datadir, args.subject,'smpl')):
+		plys = [os.path.join(args.datadir, args.subject,'smpl',f) \
+			for f in os.listdir(os.path.join(args.datadir, args.subject,'smpl')) \
+			if f[-4:] == '.ply' or f[-4:] == '.obj']
 		plys = natural_sort(plys)
 		params = []
-	elif os.path.exists(os.path.join(args.datadir,'new_vertices')):
-		plys = [os.path.join(args.datadir,'new_vertices',f) \
-			for f in os.listdir(os.path.join(args.datadir,'new_vertices')) \
-			if f[-4:] == '.npy']
+	elif os.path.exists(os.path.join(args.datadir, args.subject,'new_vertices')):
+		plys = [os.path.join(args.datadir, args.subject,'new_vertices',f) \
+			for f in os.listdir(os.path.join(args.datadir, args.subject,'new_vertices')) \
+			if f[-4:] == '.ply' or f[-4:] == '.obj']
 		tri = np.loadtxt(os.path.join(base_dir,'tri.txt')).astype(np.int64)
 		plys = natural_sort(plys)
 		params = []
-	elif os.path.exists(os.path.join(args.datadir,'vertices')):
-		plys = [os.path.join(args.datadir,'vertices',f) \
-			for f in os.listdir(os.path.join(args.datadir,'vertices')) \
+	elif os.path.exists(os.path.join(args.datadir, args.subject,'vertices')):
+		plys = [os.path.join(args.datadir, args.subject,'vertices',f) \
+			for f in os.listdir(os.path.join(args.datadir, args.subject,'vertices')) \
 			if f[-4:] == '.npy']
 		_, tri = load_obj_mesh(args.smpl_uv)
 		tri = tri.astype(np.int64)
@@ -566,8 +568,8 @@ def read_vsense_param(param_path):
 	return c2w, intr_mat
 
 def render_vsense(args):
-	views = [os.path.join(args.datadir,'RENDER', f) \
-		for f in os.listdir(os.path.join(args.datadir, 'RENDER'))]
+	views = [os.path.join(args.datadir, args.subject,'RENDER', f) \
+		for f in os.listdir(os.path.join(args.datadir, args.subject, 'RENDER'))]
 
 	views = natural_sort(views)
 	c2ws, intri = [], []
@@ -580,8 +582,8 @@ def render_vsense(args):
 	c2ws = np.stack(c2ws).reshape(len(views),-1,3,4).astype(np.float32)
 	intri = np.stack(intri).reshape(len(views),-1,3,3).astype(np.float32)
 
-	plys = [os.path.join(args.datadir,'SMPL',f) \
-		for f in os.listdir(os.path.join(args.datadir,'SMPL')) \
+	plys = [os.path.join(args.datadir, args.subject,'SMPL',f) \
+		for f in os.listdir(os.path.join(args.datadir, args.subject,'SMPL')) \
 		if f[-4:] == '.obj']
 	plys = natural_sort(plys)
 	params = []
