@@ -5,13 +5,12 @@ GeneBody Benchmark reivison of the implementation of paper "Deferred Neural Rend
 
 
 ## Installation
-The code is tested with Python3.7, PyTorch == 1.2 and CUDA == 10.0. We recommend you to use [anaconda](https://www.anaconda.com/) to make sure that all dependencies are in place. To create an anaconda environment:
+The code is tested with Python3.6, PyTorch == 1.2 and CUDA == 10.0. We recommend you to use [anaconda](https://www.anaconda.com/) to make sure that all dependencies are in place. To create an anaconda environment:
 ```
-conda env create -f environment.yml
+conda env create -n neuraltexture python=3.6
 conda activate neuraltexture
 pip install -r requirements.txt
 ```
-
 
 ## File Organization
 
@@ -50,12 +49,15 @@ python render_uv.py --datatype genebody --datadir path_to_genebody/amanda --work
 Then, in amanda/smpl_uv, the code generates per-view UV rendered images in EXR format.
 
 ### 3. Train GeneBody
-
+To train on GeneBody sequence, eg. `amanda`, you can run  
 ```powershell
 python genebody/train_genebody.py --data path_to_genebody --subject amanda
 ```
 
 ### 4. Render GeneBody
+If you want to test our pretrain model without training, please download the models from the [link](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/Eu7TlUQ5r7hIg6f7WOICT90BKIbUgUx7TByQCa-nBeZVFQ?e=I0vprE), and put then in `./logs` folder
+
+To render or test on GeneBody sequence, eg. `amanda`, you can run 
 ```powershell
 python genebody/render_genebody.py --data path_to_genebody --subject amanda
 ```
