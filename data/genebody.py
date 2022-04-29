@@ -68,7 +68,7 @@ class Dataset(torch.utils.data.Dataset):
         self.fixedcameras = [1,13,25,37] # four src views same as GNR
         self.fixedcameras = [cam for cam in self.fixedcameras if cam in self.all_cameras]
         self.loadSize = loadSize
-        self.annots = np.load(os.path.join(self.annotdir, self.subject+'.npy'), allow_pickle=True).item()['cams']
+        self.annots = np.load(os.path.join(self.datadir, self.subject, 'annots.npy'), allow_pickle=True).item()['cams']
         self.ninput = len(self.fixedcameras)
         self.is_train = subsampletype != None
 

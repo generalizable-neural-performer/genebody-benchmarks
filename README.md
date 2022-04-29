@@ -1,13 +1,44 @@
-# Neural Volumes
+# Genebody benchmark-Neural Volumes
 
 This repository contains training and evaluation code for the paper 
-[Neural Volumes](https://arxiv.org/abs/1906.07751) to use [Genebody](https://generalizable-neural-performer.github.io/) and [V-sense](https://v-sense.scss.tcd.ie/news/v-sense-volumetric-video-quality-database/) dataset. The method learns a 3D
-volumetric representation of objects & scenes that can be rendered and animated
-from only calibrated multi-view video.
+[Neural Volumes](https://arxiv.org/abs/1906.07751) to use [Genebody](https://generalizable-neural-performer.github.io/) and [V-sense](https://v-sense.scss.tcd.ie/news/v-sense-volumetric-video-quality-database/) dataset. Most of the code is borrowed from the [original implementation](https://github.com/facebookresearch/neuralvolumes).
 
-![Neural Volumes](representativeimage.jpg)
 
-## Citing Neural Volumes
+## Installation
+
+* Python (3.6+)
+  * PyTorch (1.2+)
+  * NumPy
+  * Pillow
+  * Matplotlib
+* ffmpeg (in PATH, needed to render videos)
+
+## Datasets
+Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
+```
+├──data/
+    ├──genebody/
+        ├──amanda/
+        ├──barry/
+```
+
+#### (a) **GeneBody**
+Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html) from OneDrive for training and evaluation.
+
+
+## Evaluation
+To render and evaluate a video of a trained model on GeneBody dataset:
+```
+python render_genebody.py experiments/config_genebody.py
+```
+## Training
+
+To train the model on GeneBody dataset:
+```
+python train_genebody.py experiments/config_genebody.py
+```
+
+## Citation
 
 If you use Neural Volumes in your research, please cite the [paper](https://arxiv.org/abs/1906.07751):
 ```
@@ -31,46 +62,3 @@ If you use Neural Volumes in your research, please cite the [paper](https://arxi
  address = {New York, NY, USA},
 }
 ```
-
-## File Organization
-
-The root directory contains several subdirectories and files:
-```
-data/ --- custom PyTorch Dataset classes for loading included data
-eval/ --- utilities for evaluation
-experiments/ --- location of input data and training and evaluation output
-models/ --- PyTorch modules for Neural Volumes
-render.py --- main evaluation script
-train.py --- main training script
-```
-
-## Requirements
-
-* Python (3.6+)
-  * PyTorch (1.2+)
-  * NumPy
-  * Pillow
-  * Matplotlib
-* ffmpeg (in PATH, needed to render videos)
-
-## How to Use
-
-There are two main scripts in the root directory: train_genebody.py and render_genebody.py. The
-scripts take a configuration file for the experiment that defines the dataset
-used and the options for the model (e.g., the type of decoder that is used).
-
-Please prepare the 
-
-To train the model:
-```
-python train.py config_genebody.py
-```
-
-To render a video of a trained model:
-```
-python render_genebody.py config_genebody.py
-```
-
-## License
-
-See the LICENSE file for details.
