@@ -1,0 +1,45 @@
+expname = ghr_default
+basedir = ./logs
+datadir = ./data/ghr/
+
+# zju setup
+dataset_type = ghr
+subject = zhuna
+use_background = True
+ext_scale = 0.00100
+chunk = 1024
+
+mask_image = True
+
+
+# skeleton relative encoding
+bone_type = reldir
+kp_dist_type = reldist
+view_type = relray
+
+
+use_cutoff = True
+cutoff_viewdir = True
+cutoff_inputs = True
+use_viewdirs = True
+
+image_batching = True
+N_sample_images = 64
+
+# network setting
+netwidth = 256
+netwidth_fine = 256
+multires = 7
+multires_views = 4
+
+# training setting
+N_rand = 1024
+N_samples = 64
+N_importance = 128
+n_iters = 150000
+lrate_decay = 500
+raw_noise_std = 1.0
+
+# logging
+i_testset = 10000
+

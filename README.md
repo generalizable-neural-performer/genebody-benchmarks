@@ -1,27 +1,79 @@
-# Genebody-Benchmarks
-This repository contains the training and evaluation code for [NeuralBody](https://zju3dv.github.io/neuralbody/), [NeuralVolumes](https://stephenlombardi.github.io/projects/neuralvolumes/), [NeuralHumanRendering](https://wuminye.github.io/NHR/), [NeuralTexture](https://github.com/SSRSGJYD/NeuralTexture), [A-NeRF](https://github.com/LemonATsu/A-NeRF/) and [IBRNet](https://ibrnet.github.io/) to perform novel-view synthesis on Genebody dataset. Following benchmark tables are also shown in the [paper](https://arxiv.org/pdf/2204.11798.pdf).
+# GeneBody benchmark - A-NeRF: Articulated Neural Radiance Fields for Learning Human Shape, Appearance, and Pose
 
-The code for each method is on the branches of this repository. To re-implement the results on GeneBody, please download the pretrained models in the [Model Zoo](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EpsK3TaBfGBBgtDlcWV6nxABoQeBmGUtFmDy-XQQE1jaiQ?e=QmNQbP) first, and prepare the environment and dataset based on the `README.md` on each branch.
+GeneBody Benchmark reivison of the implementation of paper "A-NeRF: Articulated Neural Radiance Fields for Learning Human Shape, Appearance, and Pose", NeurIPS 2021. This repository borrows most of the code from the [original implementation](https://github.com/LemonATsu/A-NeRF).
 
-## News
-**[29/04/22]**: First version of benchmarks released, containing 5 case-specific methods and 1 generalizable methods.
-## Benchmarks
-### Case-specific Methods on Genebody
-| Model  | PSNR | SSIM |LPIPS| ckpts|
-| :--- | :---------------:|:---------------:| :---------------:| :---------------:  |
-| [NV](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/nv)| 19.86 |0.774 |  0.267 | [ckpts](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EniK9r9UdbtGvYvtJITBGkIBlmxSHqaoEIiIgpYBGddCHQ?e=RbS0sG)|
-| [NHR](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/nhr)| 20.05  |0.800 |  0.155 | [ckpts](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EqQDNVch2j5DmyIDnHX0VgkBDdCksmT4Kfq2oPOMn6gfMg?e=dy6yUA)|
-| [NT](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/nt)| 21.68  |0.881 |   0.152 | [ckpts](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/Etg3LW44m61OjZOgDp-f4TcB_rgm_32ve529z5EZgCmoGw?e=zGUadc)|
-| [NB](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/nb)| 20.73  |0.878 |  0.231 | [ckpts](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fwchengad%5Fconnect%5Fust%5Fhk%2FDocuments%2Fgenebody%2Dbenchmark%2Dpretrained%2Fnb%2Fgenebody)|
-| [A-Nerf](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/A-Nerf)| 15.57 |0.508 |  0.242 | [ckpts](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/En56nksujH1Fn1qWiUJ-gpIBfzdHqHf66F-RvfzwTe2TBQ?e=Zz0EgX)|
 
-(see detail why A-Nerf's performance is bad in [issue](https://github.com/LemonATsu/A-NeRF/issues/8))
-### Generalizable Methods on Genebody
-| Model  | PSNR | SSIM |LPIPS| ckpts|
-| :--- | :---------------:|:---------------:| :---------------:| :---------------:  |
-| PixelNeRF (Our implemetation coming soon)| 24.15   |0.903 | 0.122 | |
-| [IBRNet](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/ibrnet)| 23.61    |0.836 |  0.177 | [ckpts](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fwchengad%5Fconnect%5Fust%5Fhk%2FDocuments%2Fgenebody%2Dbenchmark%2Dpretrained%2Fibrnet)|
+
+## Installation
+The code is tested with Python3.8, PyTorch == 1.9.0 and CUDA == 10.2. We recommend you to use [anaconda](https://www.anaconda.com/) to make sure that all dependencies are in place. To create an anaconda environment:
+```
+conda create -n anerf python=3.8
+conda activate anerf
+
+# install pytorch for your corresponding CUDA environments
+pip install torch
+
+# install pytorch3d: note that doing `pip install pytorch3d` directly may install an older version with bugs.
+# be sure that you specify the version that matches your CUDA environment. See: https://github.com/facebookresearch/pytorch3d
+pip install pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu102_pyt190/download.html
+
+# install other dependencies
+pip install -r requirements.txt
+```
+
+## How to Use
+
+### 1. Prepare datasets
+Please download the GeneBody *Test10* subset from Onedrive [link](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EgWKPko5WXdClIg_zsjDSxwBH7LM4waKyJkWaslC-BVfSQ?e=JaDZdQ), and the dataset is organized as below.
+```
+├──data/
+├───genebody_origin/
+  ├───amanda
+  ├───barry
+
+then cd in core, run python load_genebody.py
+then you can get file like this:   
+
+├──data/
+├───genebody/
+  ├───amanda_train.h5/
+  ├───amanda_test.h5/
+  ├───barry_train.h5/
+  ├───barry_test.h5/
+```
+
+### 2. Train GeneBody
+To train on GeneBody sequence, eg. `amanda`, you can run  
+```
+python run_nerf.py --config configs/genebody/genebody.txt --subject amanda --basedir logs --expname GeneBody_amanda --no_reload
+```
+
+### 3. Evaluation
+To evaluate our pretrained models on Genebody, run:
+```
+python run_render.py --nerf_args config/genebody/genebody.txt --ckptpath logs/genebody_amanda/150000.tar --dataset genebody --entry amanda --render_type val --render_res 512 512  --runname genebody_test_amanda
+```
+
+### 4. Result in GeneBody sequence:
+|  | psnr | ssim | lpsips |
+| --- | --- | --- | --- |
+| zhuna | 10.139 | 0.405 | 0.310 |
+| natacha | 18.429 | 0.383 | 0.240 |
+| mahaoran | 21.587 | 0.737 | 0.245 |
+| amanda | 16.976 | 0.699 | 0.161 |
+| fuzhizhi | 13.898 | 0.371 | 0.205 |
+| barry | 20.644 | 0.692 | 0.325 |
+| jinyutong | 12.649 | 0.412 | 0.250 |
+| joseph_matanda | 9.233 | 0.298 | 0.362 |
+| maria | 12.406 | 0.50 | 0.119 |
+| soufianou_boubacar_moumouni | 19.70 | 0.578 | 0.202 |
+| Average | 15.5661 | 0.5075 | 0.2419 |
+
+A-Nerf's performance in some cases are bad, and can barely render realistic image in most unseen pose.
+Here is some [discussion](https://github.com/LemonATsu/A-NeRF/issues/8) with the author.
+
 ## Citation
+If you find this repo is useful for your research, please cite the following papers
 ```
 @article{
     author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
@@ -29,4 +81,10 @@ The code for each method is on the branches of this repository. To re-implement 
     publisher = {arXiv},
     year = {2022},
   }
+@inproceedings{su2021anerf,
+    title={A-NeRF: Articulated Neural Radiance Fields for Learning Human Shape, Appearance, and Pose},
+    author={Su, Shih-Yang and Yu, Frank and Zollh{\"o}fer, Michael and Rhodin, Helge},
+    booktitle = {Advances in Neural Information Processing Systems},
+    year={2021}
+}
 ```
