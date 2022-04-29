@@ -24,7 +24,9 @@ Dependencies:
 
 
 ## Datasets
-Please first `cd data/`, and then download datasets into `data/`. The organization of the datasets should be the same as above.
+Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html), 
+ [ZJUMoCap](https://github.com/zju3dv/neuralbody/blob/master/INSTALL.md#zju-mocap-dataset) and [V-Senese](https://v-sense.scss.tcd.ie/news/v-sense-volumetric-video-quality-database/)  for training and evaluation.
+ The organization of the datasets should be the same as above. 
 ```
 ├──genebody/
   ├──amanda/
@@ -38,9 +40,6 @@ Please first `cd data/`, and then download datasets into `data/`. The organizati
   ├──CoreView313/
   ├──...
 ```
-
-#### (a) **GeneBody**
-Download our data [Genebody](https://generalizable-neural-performer.github.io/genebody.html) from OneDrive for training and evaluation.
 
 ## Evaluation
 First download our [pretrained models](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/EvGHnCMrL2xPoFPu6Hs4d5IBMgfAi753agWjCPOltCJsoA?e=tizNoe) under the `./logs/${SUBJECT}` directory.
