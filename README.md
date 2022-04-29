@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 The root directory contains several subdirectories and files:
 
-```
+```properties
 dataset/ --- custom PyTorch Dataset classes for loading included data
 model/ --- custom PyTorch Module classes
 util.py --- useful procedures
@@ -41,14 +41,14 @@ Please download the GeneBody *Test10* subset from Onedrive [link](https://hkustc
 
 ### 2. Render SMPLx UV images
 NeuralTexture requires the per-view UV data of geometry proxy as the input of network, we use the SMPLx model as its proxy and render the UV image using following command. Take render `amanda` as an example, run
-```console
+```
 python render_uv.py --datatype genebody --datadir path_to_genebody/amanda --workers 8
 ```
 Then, the code generates per-view UV rendered images in `amanda/smpl_uv` in EXR format.
 
 ### 3. Train GeneBody
 To train on GeneBody sequence, eg. `amanda`, you can run  
-```powershell
+```
 python genebody/train_genebody.py --data path_to_genebody --subject amanda
 ```
 
@@ -56,7 +56,7 @@ python genebody/train_genebody.py --data path_to_genebody --subject amanda
 If you want to test our pretrain model without training, please download the models from the [link](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchengad_connect_ust_hk/Eu7TlUQ5r7hIg6f7WOICT90BKIbUgUx7TByQCa-nBeZVFQ?e=I0vprE), and put then in `./logs` folder
 
 To render or test on GeneBody sequence, eg. `amanda`, you can run 
-```powershell
+```
 python genebody/render_genebody.py --data path_to_genebody --subject amanda
 ```
 
