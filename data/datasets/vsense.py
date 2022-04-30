@@ -171,7 +171,7 @@ class VsenseDataset(torch.utils.data.Dataset):
         # st()
         print(f'from {self.start_idx} to {self.end_idx}')
         self.ims = self.ims[self.start_idx : self.end_idx]
-        self.frame_num = self.end_idx - self.start_idx
+        self.frame_num = len(self.ims)
         self.vs = []
         self.vs_rgb = []
         self.vs_num = []
@@ -179,8 +179,6 @@ class VsenseDataset(torch.utils.data.Dataset):
 
         sum_tmp = 0
         for i in trange(self.start_idx, self.end_idx):
-            #tmp = np.loadtxt(os.path.join(data_folder_path,'pointclouds/frame%d.obj' % (i+1)), usecols = (1,2,3,4,5,6))
-            # tmp = np.load(os.path.join(data_folder_path,'pointclouds/frame%d.npy' % (i+1)))
             tmp, _ = load_ply(os.path.join(data_folder_path, subject, 'GEO/OBJ', f'{i:06d}.ply'))
             num_verts = tmp.shape[0]
             random_inds = np.random.randint(num_verts, size=int(0.01 * num_verts))

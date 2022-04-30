@@ -17,7 +17,7 @@ import shutil
 
 import torch.nn.functional as F
 
-sys.path.append('..')
+sys.path.insert(0, os.getcwd())
 from config import cfg
 from data import make_data_loader
 from engine.trainer import do_train

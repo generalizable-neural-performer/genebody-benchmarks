@@ -4,7 +4,8 @@ import sys, os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from  antialiased_cnns import models_lpf
+sys.path.insert(0, os.getcwd())
+from thirdparty.antialiased_cnns import models_lpf
 
 
 

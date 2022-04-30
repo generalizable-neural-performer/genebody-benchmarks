@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 
 # sys.path.append('..')
+sys.path.insert(0, os.getcwd())
 sys.path.append('.')
 from config import cfg
 from data import make_data_loader
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     dataset_dir = sys.argv[2]
     subject = sys.argv[3]
     cfg.OUTPUT_DIR = f'./logs/{subject}'
-    cfg.DATASETS.TRAIN = dataset_dir
+    cfg.DATASETS.TRAIN = [dataset_dir]
     cfg.DATASETS.SUBJECT = subject
     cfg.DATASETS.SKIP_STEP = [5]
     cfg.freeze()

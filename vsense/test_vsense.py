@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-sys.path.append('..')
+sys.path.insert(0, os.getcwd())
 from config import cfg
 from data import make_data_loader
 
