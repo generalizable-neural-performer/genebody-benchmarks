@@ -36,12 +36,12 @@ python train_genebody.py experiments/config_genebody.py  --datadir path_to_geneb
 
 ## Citation
 ```
-@article{
-    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
-    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
-    publisher = {arXiv},
-    year = {2022},
-  }
+@article{cheng2022generalizable,
+    title={Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    author={Cheng, Wei and Xu, Su and Piao, Jingtan and Qian, Chen and Wu, Wayne and Lin, Kwan-Yee and Li, Hongsheng},
+    journal={arXiv preprint arXiv:2204.11798},
+    year={2022}
+}
 
 @article{Lombardi:2019,
     author = {Stephen Lombardi and Tomas Simon and Jason Saragih and Gabriel Schwartz and Andreas Lehrmann and Yaser Sheikh},
