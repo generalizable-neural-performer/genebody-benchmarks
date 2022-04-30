@@ -31,12 +31,12 @@ python run.py  --type evaluate --cfg_file configs/genebody_test/amanda.yaml exp_
 If you find this code useful for your research, please use the following BibTeX entry.
 
 ```
-@article{
-    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
-    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
-    publisher = {arXiv},
-    year = {2022},
-  }
+@article{cheng2022generalizable,
+    title={Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    author={Cheng, Wei and Xu, Su and Piao, Jingtan and Qian, Chen and Wu, Wayne and Lin, Kwan-Yee and Li, Hongsheng},
+    journal={arXiv preprint arXiv:2204.11798},
+    year={2022}
+}
 
 @inproceedings{peng2021neural,
   title={Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans},
