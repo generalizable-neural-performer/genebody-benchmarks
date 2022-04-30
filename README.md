@@ -23,10 +23,10 @@ The code for each method is on the branches of this repository. To re-implement 
 | [IBRNet](https://github.com/generalizable-neural-performer/genebody-benchmarks/tree/ibrnet)| 23.61    |0.836 |  0.177 | [ckpts](https://hkustconnect-my.sharepoint.com/personal/wchengad_connect_ust_hk/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fwchengad%5Fconnect%5Fust%5Fhk%2FDocuments%2Fgenebody%2Dbenchmark%2Dpretrained%2Fibrnet)|
 ## Citation
 ```
-@article{
-    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
-    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
-    publisher = {arXiv},
-    year = {2022},
-  }
+@article{cheng2022generalizable,
+    title={Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    author={Cheng, Wei and Xu, Su and Piao, Jingtan and Qian, Chen and Wu, Wayne and Lin, Kwan-Yee and Li, Hongsheng},
+    journal={arXiv preprint arXiv:2204.11798},
+    year={2022}
+}
 ```
