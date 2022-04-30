@@ -73,19 +73,19 @@ python genebody/train_genebody.py configs/genebody.yml path_to_genebody amanda
 
 ## Citation
 ```
-@article{
-    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
-    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
-    publisher = {arXiv},
-    year = {2022},
-  }
+@article{cheng2022generalizable,
+    title={Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    author={Cheng, Wei and Xu, Su and Piao, Jingtan and Qian, Chen and Wu, Wayne and Lin, Kwan-Yee and Li, Hongsheng},
+    journal={arXiv preprint arXiv:2204.11798},
+    year={2022}
+}
 
 @inproceedings{wu2020multi,
-  title={Multi-View Neural Human Rendering},
-  author={Wu, Minye and Wang, Yuehao and Hu, Qiang and Yu, Jingyi},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={1682--1691},
-  year={2020}
+    title={Multi-View Neural Human Rendering},
+    author={Wu, Minye and Wang, Yuehao and Hu, Qiang and Yu, Jingyi},
+    booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+    pages={1682--1691},
+    year={2020}
 }
 ```
 
