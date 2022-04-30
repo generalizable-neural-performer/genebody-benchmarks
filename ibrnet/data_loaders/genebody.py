@@ -102,7 +102,7 @@ class GeneBodyDataset(Dataset):
                 intrinsic[1][2] = K[1][2]
                 intrinsic_list.append(intrinsic)
                 c2w = annotation[cam_idx]['c2w'].astype(np.float32)
-                c2w[:, 3] /= 2.87
+                c2w[:3, 3] /= 2.87
                 c2w_mats.append(c2w)
         return rgb_files, mask_files, intrinsic_list, c2w_mats
 
