@@ -75,12 +75,12 @@ Here is some [discussion](https://github.com/LemonATsu/A-NeRF/issues/8) with the
 ## Citation
 If you find this repo is useful for your research, please cite the following papers
 ```
-@article{
-    author = {Wei, Cheng and Su, Xu and Jingtan, Piao and Wayne, Wu and Chen, Qian and Kwan-Yee, Lin and Hongsheng, Li},
-    title = {Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
-    publisher = {arXiv},
-    year = {2022},
-  }
+@article{cheng2022generalizable,
+    title={Generalizable Neural Performer: Learning Robust Radiance Fields for Human Novel View Synthesis},
+    author={Cheng, Wei and Xu, Su and Piao, Jingtan and Qian, Chen and Wu, Wayne and Lin, Kwan-Yee and Li, Hongsheng},
+    journal={arXiv preprint arXiv:2204.11798},
+    year={2022}
+}
 @inproceedings{su2021anerf,
     title={A-NeRF: Articulated Neural Radiance Fields for Learning Human Shape, Appearance, and Pose},
     author={Su, Shih-Yang and Yu, Frank and Zollh{\"o}fer, Michael and Rhodin, Helge},
