@@ -6,9 +6,9 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader, Sampler, ConcatDataset
 from torch.utils.data._utils.collate import default_collate
 
-from pose_opt import pose_ckpt_to_pose_data
-from utils.skeleton_utils import SMPLSkeleton, get_per_joint_coords, cylinder_to_box_2d, nerf_c2w_to_extrinsic
-from utils.ray_utils import get_rays_np
+from .pose_opt import pose_ckpt_to_pose_data
+from .utils.skeleton_utils import SMPLSkeleton, get_per_joint_coords, cylinder_to_box_2d, nerf_c2w_to_extrinsic
+from .utils.ray_utils import get_rays_np
 
 dataset_catalog = {
     'h36m': {},

@@ -1,9 +1,9 @@
-expname = ghr_default
+expname = genebody_default
 basedir = ./logs
-datadir = ./data/ghr/
+datadir = ./data/genebody/
 
-# zju setup
-dataset_type = ghr
+# genebody setup
+dataset_type = genebody
 subject = zhuna
 use_background = True
 ext_scale = 0.00100

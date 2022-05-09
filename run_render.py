@@ -1090,7 +1090,7 @@ def run_render():
     np.save(os.path.join(basedir, 'bboxes.npy'), bboxes, allow_pickle=True)
     imageio.mimwrite(os.path.join(basedir, "render_rgb.mp4"), rgbs, fps=args.fps)
 
-def run_render_ghr():
+def run_render_genebody():
     args = config_parser().parse_args()
 
     # parse nerf model args
@@ -1202,4 +1202,4 @@ def run_render_ghr():
 if __name__ == '__main__':
     torch.set_default_tensor_type('torch.cuda.FloatTensor')
     #run_render()
-    run_render_ghr()
+    run_render_genebody()

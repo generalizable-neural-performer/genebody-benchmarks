@@ -645,8 +645,8 @@ def get_kp_bounding_cylinder(kp, skel_type=None, ext_scale=0.00035,
     bot = flip * (min_height - extension * bot_expand_ratio) # don't need that much for foot
     cylinder_params = np.stack([root_loc[..., g_axes[0]], root_loc[..., g_axes[1]],
                                radius, top, bot], axis=-1)
-    print(kp[..., h_axis])
-    print(cylinder_params)
+    #print(kp[..., h_axis])
+    #print(cylinder_params)
     return cylinder_params
 
 def calculate_angle(a, b=None):

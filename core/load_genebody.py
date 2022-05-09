@@ -334,7 +334,7 @@ def get_smpls(path, kp_idxs, gender='neutral', ext_scale=1.0, scale_to_ref=True,
     '''
 
     if param_path is None:
-        param_path = 'new_param'
+        param_path = 'param'
     if model_path is None:
 
         model_path = '../../smplx-model/'
@@ -344,17 +344,13 @@ def get_smpls(path, kp_idxs, gender='neutral', ext_scale=1.0, scale_to_ref=True,
     mysmplx = SMPLx('../../smplx-model/', use_openpose=False)
 
     for kp_idx in kp_idxs:
-        params = np.load(os.path.join(path, param_path, ('%04d.npy' % kp_idx)), allow_pickle=True).item()
-
-        for key, val in params.items():
-            if key not in ['betas', 'left_hand_pose', 'right_hand_pose']:
-                params[key] = torch.from_numpy(val).unsqueeze(0)
-            else:
-                params[key] = torch.from_numpy(val)
+        all_params = np.load(os.path.join(path, param_path, ('%04d.npy' % kp_idx)), allow_pickle=True).item()
+        params = all_params['smplx']
+        scale = all_params['smplx_scale']
 
         verts, joints = mysmplx(params)
-        verts = verts.squeeze(0).numpy() / 2.87
-        joints = joints.squeeze(0).numpy() / 2.87
+        verts = verts.squeeze(0).numpy() * scale
+        joints = joints.squeeze(0).numpy() * scale
 
         joints = joints[:22]
         joints_all.append(joints)
@@ -372,7 +368,6 @@ def get_smpls(path, kp_idxs, gender='neutral', ext_scale=1.0, scale_to_ref=True,
         betas.append(beta)
 
 
-    #print(len(betas))
     bones = np.concatenate(bones, axis=0).reshape(-1, 3)
     betas = np.concatenate(betas, axis=0).reshape(-1, 10)
     root_bones = np.concatenate(root_bones, axis=0).reshape(-1, 3)
@@ -383,7 +378,7 @@ def get_smpls(path, kp_idxs, gender='neutral', ext_scale=1.0, scale_to_ref=True,
     # 2. get the rest pose
     dummy = {'body_pose': torch.zeros((1, 21, 3))}
     v, j = mysmplx(dummy)
-    pose_scale = 1 / 2.87
+    pose_scale = scale
     j = j.squeeze(0).numpy() * pose_scale
     rest_pose = j[:22]
 
@@ -419,7 +414,6 @@ def process_genebody_data(data_path, subject='zhuna', training_view=None,
 
     loadsize = H = W = 512 # default image size.
     ni = 75
-    begin_i = 0
 
     if res is not None:
         H = int(H * res)
@@ -429,8 +423,8 @@ def process_genebody_data(data_path, subject='zhuna', training_view=None,
     annot_path = os.path.join(subject_path, "annots.npy")
     annots = np.load(annot_path, allow_pickle=True).item()
     cams = annots['cams']
-    num_cams = len(cams['K'])
-    i = begin_i
+    num_cams = len(cams)
+
     img_paths = []
     mask_paths = []
 
@@ -448,7 +442,10 @@ def process_genebody_data(data_path, subject='zhuna', training_view=None,
 
     for frame_id in frames_list:
         img_paths.append([os.path.join(subject_path, 'image', '{:02d}'.format(view), frame_id) for view in views])
-        mask_paths.append([os.path.join(subject_path, 'mask', '{:02d}'.format(view), f'mask0{frame_id[:-4]}.png') for view in views])
+        if subject == 'zhuna':
+            mask_paths.append([os.path.join(subject_path, 'mask', '{:02d}'.format(view), f'mask0{frame_id[:-4]}.png') for view in views])
+        else:
+            mask_paths.append([os.path.join(subject_path, 'mask', '{:02d}'.format(view), f'mask{frame_id[:-4]}.png') for view in views])
     img_paths = np.array(img_paths).ravel()
     mask_paths = np.array(mask_paths).ravel()
 
@@ -463,7 +460,6 @@ def process_genebody_data(data_path, subject='zhuna', training_view=None,
 
         if i % 50 == 0:
             print(f'{i+1}/{len(img_paths)}')
-
         idx = views.index(cam_idx)
 
         img = imageio.imread(img_path)
@@ -485,9 +481,10 @@ def process_genebody_data(data_path, subject='zhuna', training_view=None,
 
         # adjust the camera intrinsic parameter because of the cropping and resize
         # Note that there is no need to adjust extrinsic or distortation coefficents
-        K= cams['K'][idx].copy()
+        cam_view = '%02d' % idx
+        K= cams[cam_view]['K'].copy()
 
-        Rt = np.array(cams['RT'][idx], dtype=np.float32)
+        Rt = np.array(cams[cam_view]['c2w'], dtype=np.float32)
         # Rt = np.linalg.inv(Rt)
         R = Rt[:3, :3]
         T = Rt[:3, 3]
@@ -533,7 +530,7 @@ def process_genebody_data(data_path, subject='zhuna', training_view=None,
                                                                           scale_to_ref=False)
 
     #print(kp3d)
-    skeletons = draw_skeletons_3d(imgs[480:], kp3d.reshape(-1, 1, 22, 3).repeat(48, 1).reshape(-1, 22, 3),
+    skeletons = draw_skeletons_3d(imgs, kp3d.reshape(-1, 1, 22, 3).repeat(48, 1).reshape(-1, 22, 3),
                             c2ws=c2ws, H=H, W=W, focals=focals, centers=centers, skel_type=SMPLXSkeleton)
     for i, skel in enumerate(skeletons):
         basedir = 'test_smpl_cal'
@@ -647,9 +644,9 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Arguments for masks extraction')
     parser.add_argument("-d", "--dataset", type=str, default='genebody')
-    parser.add_argument("-s", "--subject", type=str, default="zhuna",
+    parser.add_argument("-s", "--subject", type=str, default="amanda",
                         help='subject to extract')
-    parser.add_argument("--split", type=str, default="test",
+    parser.add_argument("--split", type=str, default="train",
                         help='split to use')
     args = parser.parse_args()
     dataset = args.dataset
@@ -657,10 +654,13 @@ if __name__ == '__main__':
     split = args.split
 
 
-    data_path = '../data/genebody_origin/'
+    #data_path = '../data/genebody_origin/'
+    data_path = '/mnt/lustre/share_data/chengwei/GeneBody'
     write_path = '../data/genebody/'
+    os.makedirs(write_path, exist_ok=True)
+
     print(f"Processing {subject}_{split}...")
     data = process_genebody_data(data_path, subject, split=split, res=1.0)
-    process_spin.write_to_h5py(os.path.join(write_path, f"{subject}_{split}.h5"), data)
-    write_to_h5py(os.path.join(data_path, f"{subject}_{split}.h5"), data)
+    write_to_h5py(os.path.join(write_path, f"{subject}_{split}.h5"), data)
+
 
