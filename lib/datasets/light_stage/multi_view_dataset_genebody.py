@@ -1,7 +1,5 @@
 import torch.utils.data as data
-from PIL import Image
 import numpy as np
-import json
 import os
 import imageio
 import cv2
@@ -80,9 +78,7 @@ class Dataset(data.Dataset):
         elif self.human == 'joseph_matanda':
             all_views = list(set(all_views) - set([39, 40, 42, 43, 44, 45, 46, 47]))
         all_views = sorted(all_views)
-        # test_view = sorted(list(set(all_views) - set(cfg.training_view)))
         test_view = all_views
-        # view = cfg.training_view if split == 'train' else test_view
         view = all_views
         if len(view) == 0:
             view = [0]
@@ -130,9 +126,10 @@ class Dataset(data.Dataset):
     def prepare_input(self, i):
         # read xyz, normal, color from the ply file
         vertices_path = os.path.join(self.data_root, self.human, 'smpl',
-                                     f'{i:04d}.ply')
+                                     f'{i:04d}.obj')
         mesh = o3d.io.read_triangle_mesh(vertices_path)
         xyz = np.asarray(mesh.vertices).astype(np.float32)
+        xyz /= 2.87 # NOTE: to use our pretrained model, need to rescale it to the real-world scale
         nxyz = np.zeros_like(xyz).astype(np.float32)
         # obtain the original bounds for point sampling
         min_xyz = np.min(xyz, axis=0)
@@ -149,11 +146,11 @@ class Dataset(data.Dataset):
         params_path = os.path.join(self.data_root, self.human, 'param',
                                    f'{i:04}.npy')
         params = np.load(params_path, allow_pickle=True).item()
-        # Rh = params['Rh']
-        Rh = params['pose'][:3]
+        Rh = params['smplx']['global_orient'].numpy()
         R = cv2.Rodrigues(Rh)[0].astype(np.float32)
         # Th = params['Th'].astype(np.float32)
-        Th = params['transl'].astype(np.float32)
+        Th = params['smplx']['transl'].numpy()
+        Th = Th.astype(np.float32) / 2.87 # NOTE: to use our pretrained model, need to rescale it to the real-world scale
         xyz = np.dot(xyz - Th, R)
         # obtain the bounds for coord construction
         min_xyz = np.min(xyz, axis=0)
@@ -199,24 +196,22 @@ class Dataset(data.Dataset):
 
         cam_ind = self.cam_inds[index]
         cam_ind = self.all_views.index(cam_ind)
-        K = np.array(self.cams['K'][cam_ind], dtype=np.float32)
-
-        Rt = np.array(self.cams['RT'][cam_ind], dtype=np.float32)
+        K = np.array(self.cams[f'{cam_ind:02d}']['K'], dtype=np.float32)
+        Rt = np.array(self.cams[f'{cam_ind:02d}']['c2w'], dtype=np.float32)
         Rt = np.linalg.inv(Rt)
         R = Rt[:3, :3]
         T = Rt[:3, 3]
         T = T[..., None]
+        T = Rt[:3, 3] * 1. / 2.87 # NOTE: to use our pretrained model, need to rescale it to the real-world scale
         K[0,2] -= left
         K[1,2] -= top
         K[0,:] *= cfg.W / float(right - left)
         K[1,:] *= cfg.H / float(bottom - top)
 
-        # msk = cv2.cvtColor(msk, cv2.COLOR_BGR2GRAY)
         if cfg.mask_bkgd:
             img[msk == 0] = 0
             if cfg.white_bkgd:
                 img[msk == 0] = 1
-        # msk = msk[..., None]
         i = int(os.path.basename(img_path)[:-4])
         frame_index = i
         coord, out_sh, can_bounds, bounds, Rh, Th = self.prepare_input(

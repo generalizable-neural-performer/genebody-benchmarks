@@ -70,14 +70,13 @@ def load_cam(ann_file):
     K = []
     RT = []
     lower_row = np.array([[0., 0., 0., 1.]])
-
-    for i in range(len(cams['K'])):
-        K.append(np.array(cams['K'][i]))
+    for i in range(len(cams.keys())):
+        K.append(np.array(cams[i]['K']))
         K[i][:2] = K[i][:2] * cfg.ratio
-
-        r = np.array(cams['R'][i])
-        t = np.array(cams['T'][i])
+        r = np.array(cams[i]['R'])
+        t = np.array(cams[i]['T'])
         t = t[..., None]
+        t /= 2.87 # # NOTE: to use our pretrained model, need to rescale it to the real-world scale
         r_t = np.concatenate([r, t], 1)
         RT.append(np.concatenate([r_t, lower_row], 0))
 
@@ -150,9 +149,11 @@ class Dataset(data.Dataset):
     def prepare_input(self, i):
         # read xyz, normal, color from the ply file
         vertices_path = os.path.join(self.data_root, self.human, 'smpl',
-                                     f'{i:04d}.ply')
+                                     f'{i:04d}.obj')
         mesh = o3d.io.read_triangle_mesh(vertices_path)
         xyz = np.asarray(mesh.vertices).astype(np.float32)
+        xyz /= 2.87 # NOTE: to use our pretrained model, need to rescale it to the real-world scale
+
         nxyz = np.zeros_like(xyz).astype(np.float32)
         min_xyz = np.min(xyz, axis=0)
         max_xyz = np.max(xyz, axis=0)
@@ -169,10 +170,10 @@ class Dataset(data.Dataset):
                                    f'{i:04}.npy')
         params = np.load(params_path, allow_pickle=True).item()
         # Rh = params['Rh']
-        Rh = params['pose'][:3]
+        Rh = params['smplx']['global_orient'].numpy()
         R = cv2.Rodrigues(Rh)[0].astype(np.float32)
-        # Th = params['Th'].astype(np.float32)
-        Th = params['transl'].astype(np.float32)
+        Th = params['smplx']['transl'].numpy()
+        Th = Th.astype(np.float32) / 2.87 # NOTE: to use our pretrained model, need to rescale it to the real-world scale
         xyz = np.dot(xyz - Th, R)
         # obtain the bounds for coord construction
         min_xyz = np.min(xyz, axis=0)
