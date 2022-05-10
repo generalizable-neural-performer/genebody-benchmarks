@@ -33,11 +33,10 @@ class GeneBodyDataset(Dataset):
         for scene in scenes:
             self.scene_path = os.path.join(self.folder_path, scene)
             annotation = np.load(os.path.join(self.scene_path, 'annots.npy'), allow_pickle=True).item()['cams']
-            K = annotation['K']
-            Rt = annotation['RT']
-            rgb_files, mask_files, intrinsics, poses = self.read_cameras(self.scene_path, K, Rt)
-            self.Ks[scene] = annotation['K']
-            self.Rts[scene] = annotation['RT']
+            rgb_files, mask_files, intrinsics, poses = self.read_cameras(self.scene_path, annotation)
+            self.Ks[scene] = np.array([annotation[k]['K'] for k in annotation.keys()]).astype(np.float32)
+            self.Rts[scene] = np.array([annotation[k]['c2w'] for k in annotation.keys()]).astype(np.float32)
+            self.Rts[scene][:, :, 3] /= 2.87
             self.render_rgb_files.extend(rgb_files)
             self.render_poses.extend(poses)
             self.render_intrinsics.extend(intrinsics)
@@ -71,7 +70,7 @@ class GeneBodyDataset(Dataset):
         return spatial_freq
 
 
-    def read_cameras(self, scene_dir, Ks, Rts):
+    def read_cameras(self, scene_dir, annotation):
         rgb_files = []
         mask_files = []
         c2w_mats = []
@@ -96,14 +95,14 @@ class GeneBodyDataset(Dataset):
                 rgb_files.append(rgb_file)
                 mask_files.append(mask_file)
                 intrinsic = np.eye(4)
-                K = Ks.astype(np.float32)[cam_idx]
+                K = annotation[cam_idx]['K'].astype(np.float32)
                 intrinsic[0][0] = K[0][0]
                 intrinsic[1][1] = K[1][1]
                 intrinsic[0][2] = K[0][2]
                 intrinsic[1][2] = K[1][2]
                 intrinsic_list.append(intrinsic)
-                Rts = np.array(Rts)
-                c2w = Rts.astype(np.float32)[cam_idx]
+                c2w = annotation[cam_idx]['c2w'].astype(np.float32)
+                c2w[:, 3] /= 2.87
                 c2w_mats.append(c2w)
         return rgb_files, mask_files, intrinsic_list, c2w_mats
 
@@ -159,6 +158,7 @@ class GeneBodyDataset(Dataset):
         smpl_path = os.path.join(self.folder_path, scene_name_ref, 'smpl',f'{int(frame_name[:-4]):04d}.ply')
         smpl = load_ply(smpl_path)
         vert, face = smpl['vertex'][:,:3], smpl['face']
+        vert /= 2.87
         center = (vert.max(0)+vert.min(0))/2
         w2c = np.linalg.inv(render_pose)
         spatial_freq = self.get_realworld_scale(vert, w2c, render_intrinsics)
