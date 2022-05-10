@@ -120,8 +120,9 @@ class Dataset(torch.utils.data.Dataset):
         image = image.transpose((2,0,1)).astype(np.float32)
 
         idx = self.all_cameras.index(cam)
-        K = self.annots['K'][idx].astype(np.float32)
-        c2w = self.annots['RT'][idx].astype(np.float32)
+        K = self.annots[idx]['K'].astype(np.float32)
+        c2w = self.annots[idx]['c2w'].astype(np.float32)
+        c2w[:3, 3] /= 2.87
 
         K[0,2] -= left
         K[1,2] -= top
@@ -134,18 +135,11 @@ class Dataset(torch.utils.data.Dataset):
         smpldir = os.path.join(self.datadir, self.subject, 'smpl')
         smplpaths = sorted([os.path.join(smpldir, dir_) for dir_ in os.listdir(smpldir) if frame in dir_])
         verts, faces = load_ply(smplpaths[0])
+        verts /= 2.87
         verts_min, verts_max = verts.min(0), verts.max(0)
         center = (verts_min + verts_max) / 2
-        size = (verts_max - verts_min).max()
 
-        paramdir = os.path.join(self.datadir, self.subject, 'param')
-        parampaths = sorted([os.path.join(paramdir, dir_) for dir_ in os.listdir(paramdir) if frame in dir_])
-        param = np.load(parampaths[0], allow_pickle=True).item()
-        pose = param['pose'].reshape(-1, 3)
-        scale = param['body_scale']
-        smplrot = cv2.Rodrigues(pose[:1])[0]
-
-        return center, scale, smplrot
+        return center
 
 
     def __len__(self):
@@ -176,7 +170,7 @@ class Dataset(torch.utils.data.Dataset):
             if "camera" in self.keyfilter or "image" in self.keyfilter:
 
                 image, K, Rt = self.load_image(frame, cam)
-                center, scale, smplrot = self.load_smpl(frame)
+                center = self.load_smpl(frame)
                 # camera data
                 # w2c @ trasf * worldscale
                 result["camrot"] = (np.linalg.inv(Rt) @ self.transf)[:3,:3] * self.worldscale 
