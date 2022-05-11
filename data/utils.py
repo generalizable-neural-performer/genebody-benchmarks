@@ -30,14 +30,7 @@ def load_obj(file_name):
                 tri += [[f[0][0], f[0][1], f[0][i]]]
     v = np.array(v, np.float32)
     tri = np.array(tri, np.uint32)
-    if v.shape[1] >= 3:
-        c = v[:, 3:]
-        v = v[:, :3]
-        if c.max() > 2.:
-            c = c / 255.
-    else:
-        c = np.array([], v.dtype).reshape(len(v), -1)
-    return v, tri, c
+    return v, tri
 
 def cam_pose_vis(output_path, camera_poses, cds='gl', pose_type='w2c', rgbs=None, 
                   use_tex=True, camera_ids=None):

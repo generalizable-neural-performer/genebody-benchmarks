@@ -26,6 +26,7 @@ To render and evaluate a video of a trained model on GeneBody dataset, eg. `aman
 ```
 python render_genebody.py experiments/config_genebody.py --datadir path_to_genebody --subject amanda
 ```
+Note that to use our pretraining model, a multiplier of `2.87` should be applied as the pretrained models are trained with a different calibration scale, as well as the SMPL model. To evaluate your own trained model, please comment those lines.
 
 ## Training
 

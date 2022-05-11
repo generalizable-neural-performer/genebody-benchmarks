@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     # load datasets
     dataset = profile.get_dataset(args.datadir, args.subject)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=16)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=0)
 
     # data writer
     writer = profile.get_writer()
@@ -61,12 +61,12 @@ if __name__ == "__main__":
     ae = torch.nn.DataParallel(ae, device_ids=args.devices).to("cuda").eval()
 
     # load
-    # state_dict = ae.state_dict()
-    # trained_state_dict = torch.load("{}/aeparams.pt".format(outpath))
-    # trained_state_dict = {k: v for k, v in trained_state_dict.items() if k in state_dict}
-    # state_dict.update(trained_state_dict)
-    # ae.module.load_state_dict(state_dict, strict=False)
-    ae.load_state_dict(torch.load("{}/aeparams.pt".format(outpath)), strict=False)
+    state_dict = ae.state_dict()
+    trained_state_dict = torch.load("{}/aeparams.pt".format(outpath))
+    _trained_state_dict = {'module.' + k: v for k, v in trained_state_dict.items()}
+    ae.load_state_dict(_trained_state_dict, strict=True)
+    # homo-device loading
+    # ae.load_state_dict(torch.load("{}/aeparams.pt".format(outpath)), strict=False)
     # eval
     iternum = 0
     itemnum = 0

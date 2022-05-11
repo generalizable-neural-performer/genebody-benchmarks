@@ -7,8 +7,8 @@
 import numpy as np
 import os, sys
 import imageio, cv2
-from .utils import load_ply
-
+from .utils import load_ply, load_obj
+from pdb import set_trace as st
 import torch.utils.data
 
 def image_cropping(mask):
@@ -120,10 +120,9 @@ class Dataset(torch.utils.data.Dataset):
         image = image.transpose((2,0,1)).astype(np.float32)
 
         idx = self.all_cameras.index(cam)
-        K = self.annots[idx]['K'].astype(np.float32)
-        c2w = self.annots[idx]['c2w'].astype(np.float32)
+        K = self.annots[f'{idx:02d}']['K'].astype(np.float32)
+        c2w = self.annots[f'{idx:02d}']['c2w'].astype(np.float32)
         c2w[:3, 3] /= 2.87
-
         K[0,2] -= left
         K[1,2] -= top
         K[0,:] *= self.loadSize / float(right - left)
@@ -134,7 +133,8 @@ class Dataset(torch.utils.data.Dataset):
     def load_smpl(self, frame):
         smpldir = os.path.join(self.datadir, self.subject, 'smpl')
         smplpaths = sorted([os.path.join(smpldir, dir_) for dir_ in os.listdir(smpldir) if frame in dir_])
-        verts, faces = load_ply(smplpaths[0])
+        # verts, faces = load_ply(smplpaths[0])
+        verts, faces = load_obj(smplpaths[0])
         verts /= 2.87
         verts_min, verts_max = verts.min(0), verts.max(0)
         center = (verts_min + verts_max) / 2
