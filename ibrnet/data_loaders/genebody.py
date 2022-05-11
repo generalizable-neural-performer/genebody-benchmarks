@@ -6,7 +6,8 @@ import torch
 from torch.utils.data import Dataset
 import sys
 sys.path.append('../')
-from .ply_utils import load_ply
+from .ply_utils import load_ply, load_obj_mesh
+# from pdb import set_trace  as st
 
 class GeneBodyDataset(Dataset):
     def __init__(self, args, mode,
@@ -36,7 +37,7 @@ class GeneBodyDataset(Dataset):
             rgb_files, mask_files, intrinsics, poses = self.read_cameras(self.scene_path, annotation)
             self.Ks[scene] = np.array([annotation[k]['K'] for k in annotation.keys()]).astype(np.float32)
             self.Rts[scene] = np.array([annotation[k]['c2w'] for k in annotation.keys()]).astype(np.float32)
-            self.Rts[scene][:, :, 3] /= 2.87
+            self.Rts[scene][:, :3, 3] /= 2.87
             self.render_rgb_files.extend(rgb_files)
             self.render_poses.extend(poses)
             self.render_intrinsics.extend(intrinsics)
@@ -95,13 +96,13 @@ class GeneBodyDataset(Dataset):
                 rgb_files.append(rgb_file)
                 mask_files.append(mask_file)
                 intrinsic = np.eye(4)
-                K = annotation[cam_idx]['K'].astype(np.float32)
+                K = annotation[f'{cam_idx:02d}']['K'].astype(np.float32)
                 intrinsic[0][0] = K[0][0]
                 intrinsic[1][1] = K[1][1]
                 intrinsic[0][2] = K[0][2]
                 intrinsic[1][2] = K[1][2]
                 intrinsic_list.append(intrinsic)
-                c2w = annotation[cam_idx]['c2w'].astype(np.float32)
+                c2w = annotation[f'{cam_idx:02d}']['c2w'].astype(np.float32)
                 c2w[:3, 3] /= 2.87
                 c2w_mats.append(c2w)
         return rgb_files, mask_files, intrinsic_list, c2w_mats
@@ -155,9 +156,8 @@ class GeneBodyDataset(Dataset):
         # read near far by K, RT, smpl
         mesh_param = {}
         frame_name = rgb_file.split('/')[-1]
-        smpl_path = os.path.join(self.folder_path, scene_name_ref, 'smpl',f'{int(frame_name[:-4]):04d}.ply')
-        smpl = load_ply(smpl_path)
-        vert, face = smpl['vertex'][:,:3], smpl['face']
+        smpl_path = os.path.join(self.folder_path, scene_name_ref, 'smpl',f'{int(frame_name[:-4]):04d}.obj')
+        vert, face = load_obj_mesh(smpl_path)
         vert /= 2.87
         center = (vert.max(0)+vert.min(0))/2
         w2c = np.linalg.inv(render_pose)
